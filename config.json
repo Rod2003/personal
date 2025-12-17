@@ -1,0 +1,26 @@
+{
+  "title": "rodrodrod.xyz",
+  "name": "Rodrigo Del Aguila",
+  "ascii": "rodrodrod",
+  "social": {
+    "github": "Rod2003",
+    "linkedin": "rodrigo-delaguila"
+  },
+  "email": "rodrigo.daguila@gmail.com",
+  "ps1_hostname": "rodrodrod",
+  "ps1_username": "user00",
+  "resume_url": "https://drive.google.com/file/d/1_XqlB2-wr70N0oG2jVfIjbJDPVnWYwS4/view?usp=sharing",
+  "donate_url": "https://www.buymeacoffee.com/rodrigodav",
+  "colors": {
+    "dark": {
+      "background": "#3B3228",
+      "foreground": "#D0C8C6",
+      "white": "#FFFFFF",
+      "yellow": "#F4BC87",
+      "green": "#BEB55B",
+      "gray": "#A89BB9",
+      "blue": "#8AB3B5",
+      "red": "#CB6077"
+    }
+  }
+}
