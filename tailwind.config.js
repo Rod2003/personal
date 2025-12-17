@@ -1,4 +1,14 @@
-const { colors } = require('./config.json');
+// Mocha dark theme colors
+const mochaColors = {
+  background: '#3B3228',
+  foreground: '#D0C8C6',
+  white: '#FFFFFF',
+  yellow: '#F4BC87',
+  green: '#BEB55B',
+  gray: '#A89BB9',
+  blue: '#8AB3B5',
+  red: '#CB6077',
+};
 
 module.exports = {
   content: [
@@ -7,7 +17,7 @@ module.exports = {
     // './app/**/*.{ts,tsx}',
     // './src/**/*.{ts,tsx}',
   ],
-  darkMode: 'media',
+  darkMode: 'class',
   //prefix: "",
   theme: {
     /*container: {
@@ -20,7 +30,7 @@ module.exports = {
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
-      ...colors,
+      ...mochaColors,
     },
     /* extend: {
       colors: {

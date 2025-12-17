@@ -17,11 +17,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../components/dialog';
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '../components/hover-card';
 
 export const Input = ({
   inputRef,
@@ -101,10 +96,10 @@ export const Input = ({
   };
 
   return (
-    <div className="flex flex-row space-x-2 border-[1px] rounded border:white dark:border-white p-1 mr-2">
-      <div className="flex w-full justify-between items-center">
-        <div className="flex flex-row space-x-2 w-full pr-2">
-          <label htmlFor="prompt" className="flex-shrink">
+    <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0 border-[1px] rounded border-white p-2 mr-0 sm:mr-2">
+      <div className="flex w-full justify-between items-center gap-2">
+        <div className="flex flex-row space-x-1 sm:space-x-2 w-full min-w-0">
+          <label htmlFor="prompt" className="flex-shrink-0 text-xs sm:text-base">
             <Ps1 />
           </label>
 
@@ -112,10 +107,10 @@ export const Input = ({
             ref={inputRef}
             id="prompt"
             type="text"
-            className={`bg-light-background dark:bg-dark-background focus:outline-none flex-grow ${
+            className={`bg-background focus:outline-none flex-grow min-w-0 text-xs sm:text-base ${
               commandExists(command) || command === ''
-                ? 'text-dark-green'
-                : 'text-dark-red'
+                ? 'text-green'
+                : 'text-red'
             }`}
             value={command}
             onChange={onChange}
@@ -123,17 +118,17 @@ export const Input = ({
             onKeyDown={onSubmit}
             autoComplete="off"
             spellCheck="false"
-            placeholder={`type command here ('about', 'projects', 'sudo', etc)`}
+            placeholder={`type command here`}
           />
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center flex-shrink-0">
           <TooltipProvider>
             <Tooltip key={1} delayDuration={100}>
-              <TooltipTrigger onClick={() => setDialogOpen(true)}>
-                <Info />
+              <TooltipTrigger onClick={() => setDialogOpen(true)} className="p-1">
+                <Info className="w-4 h-4 sm:w-5 sm:h-5" />
               </TooltipTrigger>
               <TooltipContent
-                className="border-[1px] z-50 rounded-[4px] border-white dark:border-white dark:bg-dark-background"
+                className="border-[1px] z-50 rounded-[4px] border-white bg-background text-xs"
                 sideOffset={10}
               >
                 Click for more info
@@ -143,18 +138,18 @@ export const Input = ({
         </div>
       </div>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="border-2 border-dark-yellow dark:border-dark-yellow z-50 rounded-[4px] text-dark-white dark:text-dark-white dark:bg-dark-background">
+        <DialogContent className="border-2 border-yellow z-50 rounded-[4px] text-white bg-background">
           <DialogHeader>
             <DialogTitle>
               <div>Site Information</div>
-              <div className="text-xs pt-1 text-dark-yellow tracking-wide">
-                Release 1.2
+              <div className="text-xs pt-1 text-yellow tracking-wide">
+                Release 1.3
               </div>
             </DialogTitle>
-            <DialogDescription className="flex flex-col gap-1 max-h-[500px] overflow-y-auto">
-              <div className="pt-2"></div>
-              <div className="text-sm dark:text-dark-green">General</div>
-              <div className="text-[16px]">
+            <DialogDescription className="flex flex-col gap-1 max-h-[60vh] sm:max-h-[500px] overflow-y-auto">
+              <div className="pt-1 sm:pt-2"></div>
+              <div className="text-xs sm:text-sm text-green font-semibold">General</div>
+              <div className="text-xs sm:text-sm">
                 <p>
                   <span className="glowing">rodrodrod.xyz</span>{' '}
                   {`is a portfolio website made by me,`}{' '}
@@ -167,194 +162,79 @@ export const Input = ({
                   {`.`}
                 </p>
               </div>
-              <div className="text-[16px] pt-2">
-                It is designed as a{' '}
-                <HoverCard openDelay={100} closeDelay={100}>
-                  <HoverCardTrigger>
-                    <span className="underline cursor-pointer">
-                      shell interface
-                    </span>
-                  </HoverCardTrigger>
-                  <HoverCardContent
-                    className="border-[1px] text-xs z-50 rounded-[4px] border-white dark:border-white dark:bg-dark-background"
-                    sideOffset={6}
-                    side="top"
-                  >
-                    <p>
-                      A <span className="text-dark-green">shell interface</span>{' '}
-                      {`is a command-line interface used to interact with the operating system or application through text commands.`}
-                    </p>
-                  </HoverCardContent>
-                </HoverCard>
-                {`, similar to bash - with a few common commands such as 'whoami', 'sudo', and 'ls'.`}
+              <div className="text-xs sm:text-sm pt-2">
+                It is designed as a shell interface, similar to bash - with a few common commands such as 'whoami', 'sudo', and 'ls'.
               </div>
-              <div className="text-[16px] pt-2">
-                There are also custom commands, some with{' '}
-                <HoverCard openDelay={100} closeDelay={100}>
-                  <HoverCardTrigger>
-                    <span className="underline cursor-pointer">API calls</span>
-                  </HoverCardTrigger>
-                  <HoverCardContent
-                    className="border-[1px] text-xs z-50 rounded-[4px] border-white dark:border-white dark:bg-dark-background"
-                    sideOffset={6}
-                    side="top"
-                  >
-                    <p>
-                      An{' '}
-                      <span className="text-dark-green">
-                        API (Application Programming Interface) call
-                      </span>{' '}
-                      {`is a request made to an API endpoint to retrieve or send data between applications.`}
-                    </p>
-                  </HoverCardContent>
-                </HoverCard>
-                {`, such as 'projects', 'weather', and 'resume'.`}
+              <div className="text-xs sm:text-sm pt-2">
+                There are also custom commands, some with API calls, such as 'projects', 'weather', and 'resume'.
               </div>
-              <div className="pt-2"></div>
-              <div className="text-sm dark:text-dark-green">Usage</div>
-              <div className="text-[16px]">
+              <div className="pt-1 sm:pt-2"></div>
+              <div className="text-xs sm:text-sm text-green font-semibold">Usage</div>
+              <div className="text-xs sm:text-sm">
                 <p>
                   {`Keeping a simple user experience in mind, you can explore the site by simply typing a command and pressing enter.`}
                 </p>
               </div>
-              <div className="text-[16px] pt-2">
+              <div className="text-xs sm:text-sm pt-2">
                 <p>
                   {`As more updates are released, there will be more features that will be added. They will be recorded in the 'Releases' section and instructions will be added here.`}
                 </p>
               </div>
-              <div className="pt-2"></div>
-              <div className="text-sm dark:text-dark-green">Tech stack</div>
-              <div className="text-[16px]">
+              <div className="pt-1 sm:pt-2"></div>
+              <div className="text-xs sm:text-sm text-green font-semibold">Tech stack</div>
+              <div className="text-xs sm:text-sm">
                 This website was built with:
-                <li className="pt-1">
-                  <HoverCard openDelay={100} closeDelay={100}>
-                    <HoverCardTrigger>
-                      <span className="underline cursor-pointer">Next.js</span>
-                    </HoverCardTrigger>
-                    <HoverCardContent
-                      className="border-[1px] text-xs z-50 rounded-[4px] border-white dark:border-white dark:bg-dark-background"
-                      sideOffset={6}
-                      side="top"
-                    >
-                      <p>
-                        <span className="text-dark-green">Next.js</span> is a
-                        JavaScript framework that allows you to build
-                        server-side rendered websites and applications.
-                      </p>
-                    </HoverCardContent>
-                  </HoverCard>
-                  {` - application and server-side rendering of components`}
+                <li className="pt-1 ml-4">
+                  Next.js - application and server-side rendering of components
                 </li>
-                <li className="pt-1">
-                  <HoverCard openDelay={100} closeDelay={100}>
-                    <HoverCardTrigger>
-                      <span className="underline cursor-pointer">React.js</span>
-                    </HoverCardTrigger>
-                    <HoverCardContent
-                      className="border-[1px] text-xs z-50 rounded-[4px] border-white dark:border-white dark:bg-dark-background"
-                      sideOffset={6}
-                      side="top"
-                    >
-                      <p>
-                        <span className="text-dark-green">React.js</span> is a
-                        popular open-source JavaScript library for building user
-                        interfaces.
-                      </p>
-                    </HoverCardContent>
-                  </HoverCard>
-                  {` - state management and shell interface`}
+                <li className="pt-1 ml-4">
+                  React.js - state management and shell interface
                 </li>
-                <li className="pt-1">
-                  <HoverCard openDelay={100} closeDelay={100}>
-                    <HoverCardTrigger>
-                      <span className="underline cursor-pointer">
-                        TypeScript
-                      </span>
-                    </HoverCardTrigger>
-                    <HoverCardContent
-                      className="border-[1px] text-xs z-50 rounded-[4px] border-white dark:border-white dark:bg-dark-background"
-                      sideOffset={6}
-                      side="top"
-                    >
-                      <p>
-                        <span className="text-dark-green">TypeScript</span> is
-                        an open-source programming language built off of
-                        JavaScript with additional features such as static type
-                        checking.
-                      </p>
-                    </HoverCardContent>
-                  </HoverCard>
-                  {` - main programming language used to build website`}
+                <li className="pt-1 ml-4">
+                  TypeScript - main programming language used to build website
                 </li>
-                <li className="pt-1">
-                  <HoverCard openDelay={100} closeDelay={100}>
-                    <HoverCardTrigger>
-                      <span className="underline cursor-pointer">
-                        Tailwind CSS
-                      </span>
-                    </HoverCardTrigger>
-                    <HoverCardContent
-                      className="border-[1px] text-xs z-50 rounded-[4px] border-white dark:border-white dark:bg-dark-background"
-                      sideOffset={6}
-                      side="top"
-                    >
-                      <p>
-                        <span className="text-dark-green">Tailwind CSS</span> is
-                        a utility-first CSS framework that provides a set of CSS
-                        classes for building custom user interfaces quickly and
-                        efficiently.
-                      </p>
-                    </HoverCardContent>
-                  </HoverCard>
-                  {` - all styling classes and UI enhancements`}
+                <li className="pt-1 ml-4">
+                  Tailwind CSS - all styling classes and UI enhancements
                 </li>
-                <li className="pt-1">
-                  <HoverCard openDelay={100} closeDelay={100}>
-                    <HoverCardTrigger>
-                      <span className="underline cursor-pointer">Axios</span>
-                    </HoverCardTrigger>
-                    <HoverCardContent
-                      className="border-[1px] text-xs z-50 rounded-[4px] border-white dark:border-white dark:bg-dark-background"
-                      sideOffset={6}
-                      side="top"
-                    >
-                      <p>
-                        <span className="text-dark-green">Axios</span> is a
-                        popular open-source JavaScript library for making HTTP
-                        requests.
-                      </p>
-                    </HoverCardContent>
-                  </HoverCard>
-                  {` - API requests and error handling`}
+                <li className="pt-1 ml-4">
+                  Axios - API requests and error handling
                 </li>
               </div>
-              <div className="pt-2"></div>
-              <div className="text-sm dark:text-dark-green">Releases</div>
-              <div className="text-[16px]">
-                <div className="text-xs pt-1 text-dark-yellow tracking-wide">
+              <div className="pt-1 sm:pt-2"></div>
+              <div className="text-xs sm:text-sm text-green font-semibold">Releases</div>
+              <div className="text-xs sm:text-sm">
+                <div className="text-xs pt-1 text-yellow tracking-wide font-semibold">
+                  Release 1.3
+                </div>
+                <li className="pt-1 ml-4">Standardized to Mocha dark theme across all devices</li>
+                <li className="pt-1 ml-4">Optimized dialog and input components for mobile</li>
+                <li className="pt-1 ml-4">Removed header and status bar for cleaner interface</li>
+                <li className="pt-1 ml-4">Simplified dialog by removing interactive tooltips</li>
+                <li className="pt-1 ml-4">Added responsive ASCII banner (text on mobile, art on desktop)</li>
+                <div className="text-xs pt-1 text-yellow tracking-wide font-semibold">
                   Release 1.2
                 </div>
-                <li className="pt-1">Added typing animation</li>
-                <li className="pt-1">Improved speed of commands with caching</li>
-                <li className="pt-1">Stats bar for enhanced UI</li>
-                <li className="pt-1">Added tic-tac-toe and number guesser games</li>
-                <div className="text-xs pt-1 text-dark-yellow tracking-wide">
+                <li className="pt-1 ml-4">Added typing animation</li>
+                <li className="pt-1 ml-4">Improved speed of commands with caching</li>
+                <li className="pt-1 ml-4">Stats bar for enhanced UI</li>
+                <li className="pt-1 ml-4">Added tic-tac-toe and number guesser games</li>
+                <div className="text-xs pt-1 text-yellow tracking-wide font-semibold">
                   Release 1.1
                 </div>
-                <li className="pt-1">Added real-time date</li>
-                <li className="pt-1">
+                <li className="pt-1 ml-4">Added real-time date</li>
+                <li className="pt-1 ml-4">
                   {`Implemented info button which opens "Site Information" modal
                   on click`}
                 </li>
-                <li className="pt-1">Added tooltips for enhanced UI</li>
-                <li className="pt-1">
+                <li className="pt-1 ml-4">Added tooltips for enhanced UI</li>
+                <li className="pt-1 ml-4">
                   Included placeholder text for command input
                 </li>
-                <div className="text-xs pt-2 text-dark-yellow tracking-wide">
+                <div className="text-xs pt-2 text-yellow tracking-wide font-semibold">
                   Release 1.0
                 </div>
-                <li className="pt-1">Created shell interface</li>
-                <li className="pt-1">Added various custom commands</li>
+                <li className="pt-1 ml-4">Created shell interface</li>
+                <li className="pt-1 ml-4">Added various custom commands</li>
               </div>
             </DialogDescription>
           </DialogHeader>

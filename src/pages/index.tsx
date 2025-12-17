@@ -5,13 +5,7 @@ import { Input } from '../components/input';
 import { useHistory } from '../components/history/hook';
 import { History } from '../components/history/History';
 import { banner } from '../utils/bin';
-import { StatsProvider } from '../contexts/statsContext';
 import { GameProvider } from '../contexts/GameContext';
-import dynamic from 'next/dynamic';
-// Dynamic import with SSR disabled
-const StatusBar = dynamic(() => import('../components/StatusBar'), {
-  ssr: false,
-});
 
 interface IndexPageProps {
   inputRef: React.MutableRefObject<HTMLInputElement>;
@@ -43,39 +37,32 @@ const IndexPage: React.FC<IndexPageProps> = ({ inputRef }) => {
   }, [history]);
 
   return (
-    <StatsProvider>
-      <GameProvider>
-        <Head>
-          <title>{config.title}</title>
-        </Head>
+    <GameProvider>
+      <Head>
+        <title>{config.title}</title>
+      </Head>
 
-        <div className="flex flex-row justify-between items-center pb-1 text-xl px-4 glowing">
-          <h1>rodrodrod.xyz</h1>
+      <div className="p-2 sm:p-4 md:p-8 overflow-hidden h-full border-2 rounded border-yellow">
+        <div
+          ref={containerRef}
+          className="overflow-y-auto h-full overflow-x-hidden"
+        >
+          <History history={history} />
+
+          <Input
+            inputRef={inputRef}
+            containerRef={containerRef}
+            command={command}
+            history={history}
+            lastCommandIndex={lastCommandIndex}
+            setCommand={setCommand}
+            setHistory={setHistory}
+            setLastCommandIndex={setLastCommandIndex}
+            clearHistory={clearHistory}
+          />
         </div>
-
-        <div className="p-8 overflow-hidden h-[calc(94vh)] border-2 rounded border-light-yellow dark:border-dark-yellow display:flex flex-direction:row">
-          <div
-            ref={containerRef}
-            className="overflow-y-auto h-full overflow-x-auto"
-          >
-            <History history={history} />
-
-            <Input
-              inputRef={inputRef}
-              containerRef={containerRef}
-              command={command}
-              history={history}
-              lastCommandIndex={lastCommandIndex}
-              setCommand={setCommand}
-              setHistory={setHistory}
-              setLastCommandIndex={setLastCommandIndex}
-              clearHistory={clearHistory}
-            />
-          </div>
-          <StatusBar />
-        </div>
-      </GameProvider>
-    </StatsProvider>
+      </div>
+    </GameProvider>
   );
 };
 
