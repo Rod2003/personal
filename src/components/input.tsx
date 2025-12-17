@@ -32,7 +32,16 @@ export const Input = ({
 }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { mode } = useMode();
-  const shell = createShell(mode);
+  
+  // Handler for when a command button is clicked in the help output
+  const handleCommandClick = (cmd: string) => {
+    setCommand(cmd);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+  
+  const shell = createShell(mode, handleCommandClick);
 
   const onSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     const commands: [string] = history

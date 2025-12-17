@@ -41,9 +41,47 @@ const TypeWriter: React.FC<TypeWriterProps> = ({
     }
   }, [currentIndex, text, speed, isPaused, onComplete]);
 
+  // Parse HTML links in text and convert to React elements
+  const renderText = (text: string) => {
+    const linkRegex = /<a\s+(?:[^>]*?\s+)?class="([^"]*)"\s+href="([^"]*)"\s*(?:target="([^"]*)")?>([^<]*)<\/a>/g;
+    const parts: (string | JSX.Element)[] = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = linkRegex.exec(text)) !== null) {
+      // Add text before the link
+      if (match.index > lastIndex) {
+        parts.push(text.substring(lastIndex, match.index));
+      }
+      
+      // Add the link as a React element
+      const [, className, href, target, linkText] = match;
+      parts.push(
+        <a 
+          key={match.index}
+          className={className}
+          href={href}
+          target={target || undefined}
+          rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+        >
+          {linkText}
+        </a>
+      );
+      
+      lastIndex = match.index + match[0].length;
+    }
+    
+    // Add remaining text
+    if (lastIndex < text.length) {
+      parts.push(text.substring(lastIndex));
+    }
+    
+    return parts.length > 0 ? parts : text;
+  };
+
   return (
     <div className={`font-mono whitespace-pre-wrap ${className}`}>
-      <p dangerouslySetInnerHTML={{ __html: displayedText }} />
+      <p>{renderText(displayedText)}</p>
       {!isComplete && <span className="animate-pulse">▋</span>}
     </div>
   );

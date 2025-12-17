@@ -3,20 +3,10 @@
 import * as bin from './index';
 import config from '../../../config.json';
 
-// Help
+// Help - returns a special marker for React component rendering
 export const help = async (args: string[]): Promise<string> => {
-  const commands = Object.keys(bin).sort().join(', ');
-  var c = '';
-  for (let i = 1; i <= Object.keys(bin).sort().length; i++) {
-    c += Object.keys(bin).sort()[i - 1] + '\n';
-  }
-  return `Welcome! Here are all the available commands:
-\n${c}\n
-[tab]: trigger completion.
-[ctrl+l]/clear: clear terminal.
-
-Tip: Toggle between normal and advanced mode using the icon in the top right corner.
-`;
+  // Return a special marker that will be intercepted by the shell
+  return '__HELP_COMPONENT__';
 };
 
 // About
@@ -27,12 +17,6 @@ Welcome to my website!
 
 More about me:
 'linkedin' - my LinkedIn profile.`;
-};
-
-// Contact
-export const email = async (args: string[]): Promise<string> => {
-  window.open(`mailto:${config.email}`);
-  return `Opening mailto:${config.email}...`;
 };
 
 export const github = async (args: string[]): Promise<string> => {

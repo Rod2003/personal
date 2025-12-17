@@ -1,12 +1,23 @@
 import React from 'react';
 import * as bin from './bin';
 import { CommandMode, isCommandAvailable } from '../configs/modes-config';
+import { commandDescriptions } from '../configs/command-descriptions';
+
+// Special type for help command output
+export interface HelpCommandOutput {
+  __type: 'HELP_COMPONENT';
+  commands: Array<{ name: string; description: string }>;
+  onCommandClick?: (command: string) => void;
+}
 
 // Create a new function that uses the context
-export const createShell = (mode?: CommandMode) => {
+export const createShell = (
+  mode?: CommandMode,
+  onCommandClick?: (command: string) => void,
+) => {
   return async (
     command: string,
-    setHistory: (value: string) => void,
+    setHistory: (value: string | HelpCommandOutput) => void,
     clearHistory: () => void,
     setCommand: React.Dispatch<React.SetStateAction<string>>,
   ) => {
@@ -27,7 +38,24 @@ export const createShell = (mode?: CommandMode) => {
       );
     } else {
       const output = await bin[args[0]](args.slice(1));
-      setHistory(output);
+      
+      // Check if this is the help command
+      if (output === '__HELP_COMPONENT__') {
+        const commands = Object.keys(bin)
+          .sort()
+          .map((name) => ({
+            name,
+            description: commandDescriptions[name] || 'No description available',
+          }));
+        
+        setHistory({
+          __type: 'HELP_COMPONENT',
+          commands,
+          onCommandClick,
+        });
+      } else {
+        setHistory(output);
+      }
     }
 
     setCommand('');

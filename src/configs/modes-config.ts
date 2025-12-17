@@ -7,7 +7,6 @@ export type CommandMode = 'normal' | 'advanced';
 export const NORMAL_MODE_COMMANDS = [
   'help',
   'about',
-  'email',
   'github',
   'linkedin',
   'projects',
