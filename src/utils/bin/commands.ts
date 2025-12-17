@@ -14,6 +14,8 @@ export const help = async (args: string[]): Promise<string> => {
 \n${c}\n
 [tab]: trigger completion.
 [ctrl+l]/clear: clear terminal.
+
+Tip: Toggle between normal and advanced mode using the icon in the top right corner.
 `;
 };
 
@@ -25,14 +27,6 @@ Welcome to my website!
 
 More about me:
 'linkedin' - my LinkedIn profile.`;
-};
-
-// Donate
-export const donate = async (args: string[]): Promise<string> => {
-  return `thank you for your interest. 
-here is the way you can support my work:
-- <u><a class="text-blue underline" href="${config.donate_url}" target="_blank">buymeacoffee</a></u>
-`;
 };
 
 // Contact
@@ -87,8 +81,7 @@ directories`;
 };
 
 export const cd = async (args: string[]): Promise<string> => {
-  return `unfortunately, i cannot afford more directories.
-if you want to help, you can type 'donate'.`;
+  return `unfortunately, i cannot afford more directories.`;
 };
 
 export const date = async (args: string[]): Promise<string> => {

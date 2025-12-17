@@ -5,6 +5,14 @@ import { Input } from '../components/input';
 import { useHistory } from '../components/history/hook';
 import { History } from '../components/history/History';
 import { GameProvider } from '../contexts/GameContext';
+import { ModeProvider, useMode } from '../contexts/ModeContext';
+import { Terminal, TerminalSquare } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../components/tooltip';
 
 interface IndexPageProps {
   inputRef: React.MutableRefObject<HTMLInputElement>;
@@ -44,8 +52,9 @@ Type 'help' to see the list of available commands.
 `;
 };
 
-const IndexPage: React.FC<IndexPageProps> = ({ inputRef }) => {
+const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
   const containerRef = useRef(null);
+  const { mode, toggleMode } = useMode();
   const {
     history,
     command,
@@ -70,12 +79,37 @@ const IndexPage: React.FC<IndexPageProps> = ({ inputRef }) => {
   }, [history]);
 
   return (
-    <GameProvider>
+    <>
       <Head>
         <title>{config.title}</title>
       </Head>
 
-      <div className="p-2 sm:p-4 md:p-8 overflow-hidden h-full border-2 rounded border-yellow">
+      <div className="p-2 sm:p-4 md:p-8 overflow-hidden h-full border-2 rounded border-yellow relative">
+        {/* Mode Toggle Button */}
+        <div className="absolute top-2 right-2 z-10">
+          <TooltipProvider>
+            <Tooltip delayDuration={100}>
+              <TooltipTrigger 
+                onClick={toggleMode} 
+                className="p-1 hover:bg-yellow/10 rounded transition-colors"
+              >
+                {mode === 'normal' ? (
+                  <TerminalSquare className="w-4 h-4 text-yellow" />
+                ) : (
+                  <Terminal className="w-4 h-4 text-green" />
+                )}
+              </TooltipTrigger>
+              <TooltipContent
+                className="border-[1px] z-50 rounded-[4px] border-white bg-background text-xs"
+                sideOffset={8}
+                side='left'
+              >
+                {mode === 'normal' ? 'Toggle advanced mode' : 'Toggle normal mode'}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+
         <div
           ref={containerRef}
           className="overflow-y-auto h-full overflow-x-hidden"
@@ -95,7 +129,17 @@ const IndexPage: React.FC<IndexPageProps> = ({ inputRef }) => {
           />
         </div>
       </div>
-    </GameProvider>
+    </>
+  );
+};
+
+const IndexPage: React.FC<IndexPageProps> = ({ inputRef }) => {
+  return (
+    <ModeProvider>
+      <GameProvider>
+        <IndexPageContent inputRef={inputRef} />
+      </GameProvider>
+    </ModeProvider>
   );
 };
 

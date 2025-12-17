@@ -1,6 +1,13 @@
 import * as bin from './bin';
+import { CommandMode, isCommandAvailable } from '../configs/modes-config';
 
-export const commandExists = (command: string) => {
+export const commandExists = (command: string, mode?: CommandMode) => {
   const commands = ['clear', ...Object.keys(bin)];
-  return commands.indexOf(command.split(' ')[0].toLowerCase()) !== -1;
+  const cmd = command.split(' ')[0].toLowerCase();
+  const exists = commands.indexOf(cmd) !== -1;
+  
+  if (!exists) return false;
+  if (!mode) return true;
+  
+  return isCommandAvailable(cmd, mode);
 };
