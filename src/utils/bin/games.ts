@@ -52,8 +52,7 @@ Usage:
   
 During games:
   move <position> - Make a move in Tic Tac Toe (1-9)
-  guess <number> - Make a guess (1-100)
-  exit - Quit current game`;
+  guess <number> - Make a guess (1-100)`;
   }
 
   const game = args[0].toLowerCase();
@@ -78,7 +77,6 @@ Instructions:
  7 │ 8 │ 9 
 
 Type 'move <position>' to play (e.g., 'move 5' for center)
-Type 'exit' to quit the game
 
 ${formatBoard(ticTacToeState.board)}
 Player X's turn!`;
@@ -94,7 +92,6 @@ Player X's turn!`;
 
 I'm thinking of a number between 1 and 100.
 Type 'guess <number>' to make a guess.
-Type 'exit' to quit the game.
 
 You have ${numberGameState.triesLeft} tries remaining. Good luck!`;
 
@@ -114,7 +111,7 @@ export const move = async (args: string[]): Promise<string> => {
   }
 
   if (ticTacToeState.gameOver) {
-    return 'Game is over! Type "exit" to quit or "games tictactoe" to start a new game.';
+    return 'Game is over! Type "games tictactoe" to start a new game.';
   }
 
   const position = parseInt(args[0]);
@@ -161,7 +158,7 @@ export const guess = async (args: string[]): Promise<string> => {
   }
 
   if (numberGameState.gameOver) {
-    return 'Game is over! Type "exit" to quit or "games guess" to start a new game.';
+    return 'Game is over! Type "games guess" to start a new game.';
   }
 
   const guess = parseInt(args[0]);
@@ -183,15 +180,4 @@ export const guess = async (args: string[]): Promise<string> => {
 
   const hint = guess > numberGameState.targetNumber ? 'Too high!' : 'Too low!';
   return `${hint}\nYou have ${numberGameState.triesLeft} tries remaining.`;
-};
-
-// Exit current game
-export const exit = async (args: string[]): Promise<string> => {
-  if (!currentGame) {
-    return 'No game in progress.';
-  }
-  
-  const exitedGame = currentGame;
-  currentGame = null;
-  return `Exited ${exitedGame}. Type "games" to see available games!`;
 };

@@ -17,6 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../components/dialog';
+import { useMode } from '../contexts/ModeContext';
 
 export const Input = ({
   inputRef,
@@ -30,7 +31,8 @@ export const Input = ({
   clearHistory,
 }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const shell = createShell();
+  const { mode } = useMode();
+  const shell = createShell(mode);
 
   const onSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     const commands: [string] = history
@@ -108,7 +110,7 @@ export const Input = ({
             id="prompt"
             type="text"
             className={`bg-background focus:outline-none flex-grow min-w-0 text-xs sm:text-base ${
-              commandExists(command) || command === ''
+              commandExists(command, mode) || command === ''
                 ? 'text-green'
                 : 'text-red'
             }`}
@@ -143,7 +145,7 @@ export const Input = ({
             <DialogTitle>
               <div>Site Information</div>
               <div className="text-xs pt-1 text-yellow tracking-wide">
-                Release 1.3
+                Release 1.4
               </div>
             </DialogTitle>
             <DialogDescription className="flex flex-col gap-1 max-h-[60vh] sm:max-h-[500px] overflow-y-auto">
@@ -166,7 +168,7 @@ export const Input = ({
                 It is designed as a shell interface, similar to bash - with a few common commands such as 'whoami', 'sudo', and 'ls'.
               </div>
               <div className="text-xs sm:text-sm pt-2">
-                There are also custom commands, some with API calls, such as 'projects', 'weather', and 'resume'.
+                There are also custom commands, some with API calls, such as 'projects' and 'weather'.
               </div>
               <div className="pt-1 sm:pt-2"></div>
               <div className="text-xs sm:text-sm text-green font-semibold">Usage</div>
@@ -203,6 +205,12 @@ export const Input = ({
               <div className="pt-1 sm:pt-2"></div>
               <div className="text-xs sm:text-sm text-green font-semibold">Releases</div>
               <div className="text-xs sm:text-sm">
+                <div className="text-xs pt-1 text-yellow tracking-wide font-semibold">
+                  Release 1.4
+                </div>
+                <li className="pt-1 ml-4">Added mode toggle for normal/advanced command sets</li>
+                <li className="pt-1 ml-4">Streamlined command interface for better user experience by removing unnecessary commands</li>
+                <li className="pt-1 ml-4">Added command filtering based on selected mode</li>
                 <div className="text-xs pt-1 text-yellow tracking-wide font-semibold">
                   Release 1.3
                 </div>
