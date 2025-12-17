@@ -4,12 +4,45 @@ import config from '../../config.json';
 import { Input } from '../components/input';
 import { useHistory } from '../components/history/hook';
 import { History } from '../components/history/History';
-import { banner } from '../utils/bin';
 import { GameProvider } from '../contexts/GameContext';
 
 interface IndexPageProps {
   inputRef: React.MutableRefObject<HTMLInputElement>;
 }
+
+// Banner function for initial display only (not a command)
+const getBanner = (): string => {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  
+  if (isMobile) {
+    return `
+<span class="text-2xl font-bold text-yellow">RODRIGO DEL AGUILA</span>
+
+Welcome to my website.
+
+Type 'help' to see the list of available commands.
+`;
+  }
+  
+  return `
+██████╗  ██████╗ ██████╗ ██████╗ ██╗ ██████╗  ██████╗                    
+██╔══██╗██╔═══██╗██╔══██╗██╔══██╗██║██╔════╝ ██╔═══██╗                   
+██████╔╝██║   ██║██║  ██║██████╔╝██║██║  ███╗██║   ██║                   
+██╔══██╗██║   ██║██║  ██║██╔══██╗██║██║   ██║██║   ██║                   
+██║  ██║╚██████╔╝██████╔╝██║  ██║██║╚██████╔╝╚██████╔╝                   
+╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝                    
+                                                                         
+██████╗ ███████╗██╗          █████╗  ██████╗ ██╗   ██╗██╗██╗      █████╗ 
+██╔══██╗██╔════╝██║         ██╔══██╗██╔════╝ ██║   ██║██║██║     ██╔══██╗
+██║  ██║█████╗  ██║         ███████║██║  ███╗██║   ██║██║██║     ███████║
+██║  ██║██╔══╝  ██║         ██╔══██║██║   ██║██║   ██║██║██║     ██╔══██║
+██████╔╝███████╗███████╗    ██║  ██║╚██████╔╝╚██████╔╝██║███████╗██║  ██║
+╚═════╝ ╚══════╝╚══════╝    ╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═╝  ╚═╝
+                                                                         
+                                                                                                         
+Type 'help' to see the list of available commands.
+`;
+};
 
 const IndexPage: React.FC<IndexPageProps> = ({ inputRef }) => {
   const containerRef = useRef(null);
@@ -23,7 +56,7 @@ const IndexPage: React.FC<IndexPageProps> = ({ inputRef }) => {
     setLastCommandIndex,
   } = useHistory([]);
 
-  const init = useCallback(() => setHistory(banner()), []);
+  const init = useCallback(() => setHistory(getBanner()), []);
 
   useEffect(() => {
     init();

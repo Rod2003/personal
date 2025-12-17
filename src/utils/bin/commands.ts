@@ -13,8 +13,7 @@ export const help = async (args: string[]): Promise<string> => {
   return `Welcome! Here are all the available commands:
 \n${c}\n
 [tab]: trigger completion.
-[ctrl+l]/clear: clear terminal.\n
-Type 'sumfetch' to display summary.
+[ctrl+l]/clear: clear terminal.
 `;
 };
 
@@ -25,15 +24,7 @@ I have a passion for building software products with visible impact.
 Welcome to my website!
 
 More about me:
-'sumfetch' - short summary.
-'resume' - my latest resume.
-'linkedin - my LinkedIn profile.`;
-};
-
-// Resume
-export const resume = async (args: string[]): Promise<string> => {
-  window.open(`${config.resume_url}`);
-  return 'Opening resume...';
+'linkedin' - my LinkedIn profile.`;
 };
 
 // Donate
@@ -63,16 +54,6 @@ export const linkedin = async (args: string[]): Promise<string> => {
   return 'Opening linkedin...';
 };
 
-// Search
-export const google = async (args: string[]): Promise<string> => {
-  window.open(`https://google.com/search?q=${args.join(' ')}`);
-  return `Searching google for ${args.join(' ')}...`;
-};
-
-export const reddit = async (args: string[]): Promise<string> => {
-  window.open(`https://www.reddit.com/search/?q=${args.join(' ')}`);
-  return `Searching reddit for ${args.join(' ')}...`;
-};
 
 // Typical linux commands
 export const echo = async (args: string[]): Promise<string> => {
@@ -135,39 +116,3 @@ export const sudo = async (args?: string[]): Promise<string> => {
   return `Permission denied: with little power comes... no responsibility? `;
 };
 
-// Banner
-export const banner = (args?: string[]): string => {
-  // Check if mobile (this will be evaluated on the client side)
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  
-  if (isMobile) {
-    return `
-<span class="text-2xl font-bold text-yellow">RODRIGO DEL AGUILA</span>
-
-Welcome to my website.
-
-Type 'help' to see the list of available commands.
-Type 'sumfetch' to display summary.
-`;
-  }
-  
-  return `
-██████╗  ██████╗ ██████╗ ██████╗ ██╗ ██████╗  ██████╗                    
-██╔══██╗██╔═══██╗██╔══██╗██╔══██╗██║██╔════╝ ██╔═══██╗                   
-██████╔╝██║   ██║██║  ██║██████╔╝██║██║  ███╗██║   ██║                   
-██╔══██╗██║   ██║██║  ██║██╔══██╗██║██║   ██║██║   ██║                   
-██║  ██║╚██████╔╝██████╔╝██║  ██║██║╚██████╔╝╚██████╔╝                   
-╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝                    
-                                                                         
-██████╗ ███████╗██╗          █████╗  ██████╗ ██╗   ██╗██╗██╗      █████╗ 
-██╔══██╗██╔════╝██║         ██╔══██╗██╔════╝ ██║   ██║██║██║     ██╔══██╗
-██║  ██║█████╗  ██║         ███████║██║  ███╗██║   ██║██║██║     ███████║
-██║  ██║██╔══╝  ██║         ██╔══██║██║   ██║██║   ██║██║██║     ██╔══██║
-██████╔╝███████╗███████╗    ██║  ██║╚██████╔╝╚██████╔╝██║███████╗██║  ██║
-╚═════╝ ╚══════╝╚══════╝    ╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═╝  ╚═╝
-                                                                         
-                                                                                                         
-Type 'help' to see the list of available commands.
-Type 'sumfetch' to display summary.
-`;
-};

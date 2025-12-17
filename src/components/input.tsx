@@ -166,7 +166,7 @@ export const Input = ({
                 It is designed as a shell interface, similar to bash - with a few common commands such as 'whoami', 'sudo', and 'ls'.
               </div>
               <div className="text-xs sm:text-sm pt-2">
-                There are also custom commands, some with API calls, such as 'projects', 'weather', and 'resume'.
+                There are also custom commands, some with API calls, such as 'projects' and 'weather'.
               </div>
               <div className="pt-1 sm:pt-2"></div>
               <div className="text-xs sm:text-sm text-green font-semibold">Usage</div>
