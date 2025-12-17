@@ -8,6 +8,17 @@
   display: swap;
 }
 
+/* Mocha theme CSS variables */
+:root {
+  --mocha-background: #3B3228;
+  --mocha-foreground: #D0C8C6;
+  --mocha-yellow: #F4BC87;
+  --mocha-green: #BEB55B;
+  --mocha-gray: #A89BB9;
+  --mocha-blue: #8AB3B5;
+  --mocha-red: #CB6077;
+}
+
 * {
   font-family: 'Hack', monospace;
 }
@@ -21,25 +32,34 @@ div#__next > div {
   overflow: auto;
 }
 
-.glowing {
-  text-shadow: 0 0 5px #aaaaaa;
+/* Mobile-friendly overflow */
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
 }
 
+.glowing {
+  text-shadow: 0 0 5px var(--mocha-gray);
+}
+
+/* Mocha-themed scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e252e;
+  background: var(--mocha-background);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ebdbb2;
+  background: var(--mocha-foreground);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ff8037;
+  background: var(--mocha-yellow);
 }

@@ -17,9 +17,7 @@ export const StatsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [stats, setStats] = useState<TerminalStats>({
     commandCount: 0,
     lastCommand: '',
-    theme: typeof window !== 'undefined' && window?.matchMedia('(prefers-color-scheme: dark)').matches 
-    ? 'dark' 
-    : 'light'
+    theme: 'Mocha'
   });
 
   const updateStats = (command: string) => {

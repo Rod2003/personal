@@ -1,11 +1,8 @@
 import React from 'react';
 import * as bin from './bin';
-import { useStats } from '../contexts/statsContext';
 
 // Create a new function that uses the context
 export const createShell = () => {
-  const { updateStats } = useStats();
-
   return async (
     command: string,
     setHistory: (value: string) => void,
@@ -26,7 +23,6 @@ export const createShell = () => {
     } else {
       const output = await bin[args[0]](args.slice(1));
       setHistory(output);
-      updateStats(command);  // Update stats when command is successful
     }
 
     setCommand('');

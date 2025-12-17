@@ -40,7 +40,7 @@ export const resume = async (args: string[]): Promise<string> => {
 export const donate = async (args: string[]): Promise<string> => {
   return `thank you for your interest. 
 here is the way you can support my work:
-- <u><a class="text-light-blue dark:text-dark-blue underline" href="${config.donate_url}" target="_blank">buymeacoffee</a></u>
+- <u><a class="text-blue underline" href="${config.donate_url}" target="_blank">buymeacoffee</a></u>
 `;
 };
 
@@ -137,6 +137,20 @@ export const sudo = async (args?: string[]): Promise<string> => {
 
 // Banner
 export const banner = (args?: string[]): string => {
+  // Check if mobile (this will be evaluated on the client side)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  
+  if (isMobile) {
+    return `
+<span class="text-2xl font-bold text-yellow">RODRIGO DEL AGUILA</span>
+
+Welcome to my website.
+
+Type 'help' to see the list of available commands.
+Type 'sumfetch' to display summary.
+`;
+  }
+  
   return `
 ██████╗  ██████╗ ██████╗ ██████╗ ██╗ ██████╗  ██████╗                    
 ██╔══██╗██╔═══██╗██╔══██╗██╔══██╗██║██╔════╝ ██╔═══██╗                   
