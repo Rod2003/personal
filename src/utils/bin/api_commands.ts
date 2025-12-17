@@ -1,20 +1,12 @@
 // // List of commands that require API calls
 
-import { getProjects } from '../api';
+import React from 'react';
 import { getQuote } from '../api';
 import { getWeather } from '../api';
+import { ProjectsList } from '../../components/ProjectsList';
 
-export const projects = async (args: string[]): Promise<string> => {
-  const projects = await getProjects();
-  return (
-    projects
-      .map(
-        (repo) =>
-          `${repo.name} - <a class="text-blue underline" href="${repo.html_url}" target="_blank">${repo.html_url}</a>`,
-      )
-      .join('\n') +
-    `\n\nMore of my non-technical work here: <a href=https://linktr.ee/rodrigodav>https://linktr.ee/rodrigodav</a>\n`
-  );
+export const projects = async (args: string[]): Promise<React.ReactElement> => {
+  return React.createElement(ProjectsList);
 };
 
 export const quote = async (args: string[]): Promise<string> => {

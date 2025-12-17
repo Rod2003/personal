@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { History } from './interface';
 
 export const useHistory = (defaultValue: Array<History>) => {
@@ -10,7 +10,7 @@ export const useHistory = (defaultValue: Array<History>) => {
     history,
     command,
     lastCommandIndex,
-    setHistory: (value: string) =>
+    setHistory: (value: string | ReactNode) =>
       setHistory([
         ...history,
         {

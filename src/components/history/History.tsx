@@ -16,11 +16,15 @@ export const History: React.FC<{ history: Array<HistoryInterface> }> = ({
             </div>
             <div className="flex-grow">{entry.command}</div>
           </div>
-          <TypeWriter
-            text={entry.output}
-            className="whitespace-pre-wrap mb-2"
-            speed={1}
-          />
+          {typeof entry.output === 'string' ? (
+            <TypeWriter
+              text={entry.output}
+              className="whitespace-pre-wrap mb-2"
+              speed={1}
+            />
+          ) : (
+            <div className="mb-2">{entry.output}</div>
+          )}
         </div>
       ))}
     </>

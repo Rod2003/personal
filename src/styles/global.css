@@ -63,3 +63,40 @@ div#__next > div {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--mocha-yellow);
 }
+
+/* Project accordion styles */
+.project-accordion {
+  transition: all 0.2s ease;
+}
+
+.project-accordion summary {
+  outline: none;
+  cursor: pointer;
+}
+
+.project-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.project-accordion[open] summary .arrow {
+  transform: rotate(90deg);
+}
+
+.project-accordion summary:hover {
+  opacity: 0.8;
+}
+
+/* Mobile responsive adjustments for projects */
+@media (max-width: 768px) {
+  .project-accordion {
+    font-size: 0.875rem;
+  }
+  
+  .project-accordion summary {
+    padding: 0.25rem 0;
+  }
+  
+  .project-item {
+    font-size: 0.875rem;
+  }
+}

@@ -43,7 +43,7 @@ const TypeWriter: React.FC<TypeWriterProps> = ({
 
   return (
     <div className={`font-mono whitespace-pre-wrap ${className}`}>
-      <p dangerouslySetInnerHTML={{ __html: displayedText }} />
+      <div dangerouslySetInnerHTML={{ __html: displayedText }} />
       {!isComplete && <span className="animate-pulse">▋</span>}
     </div>
   );

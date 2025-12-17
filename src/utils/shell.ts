@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import * as bin from './bin';
 
 // Create a new function that uses the context
 export const createShell = () => {
   return async (
     command: string,
-    setHistory: (value: string) => void,
+    setHistory: (value: string | ReactNode) => void,
     clearHistory: () => void,
     setCommand: React.Dispatch<React.SetStateAction<string>>,
   ) => {
