@@ -10,6 +10,7 @@ export const commandDescriptions: Record<string, string> = {
   help: "Display this help menu with all available commands",
   linkedin: "Visit my LinkedIn profile",
   ls: "List directory contents (simulated)",
+  mode: "Display current mode and available commands",
   move: "Play a terminal-based movement game",
   nvim: "Try to use the nvim editor (with a twist)",
   projects: "View my projects",

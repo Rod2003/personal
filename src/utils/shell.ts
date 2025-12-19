@@ -14,6 +14,7 @@ export interface HelpCommandOutput {
 export const createShell = (
   mode?: CommandMode,
   onCommandClick?: (command: string) => void,
+  toggleMode?: () => void,
 ) => {
   return async (
     command: string,
@@ -41,7 +42,9 @@ export const createShell = (
       
       // Check if this is the help command
       if (output === '__HELP_COMPONENT__') {
+        // Filter commands based on current mode
         const commands = Object.keys(bin)
+          .filter((name) => !mode || isCommandAvailable(name, mode))
           .sort()
           .map((name) => ({
             name,
@@ -53,6 +56,21 @@ export const createShell = (
           commands,
           onCommandClick,
         });
+      } else if (output === '__MODE_INFO__') {
+        // Handle mode command
+        const currentMode = mode || 'normal';
+        const modeInfo = `Current mode: ${currentMode}
+        
+Available modes:
+  - normal: Essential site commands only
+  - advanced: All commands including bash CLI commands
+
+To toggle modes:
+  - Click the terminal icon in the top right corner
+  - Or use the keyboard shortcut (if available)
+
+Current mode commands: ${currentMode === 'normal' ? 'help, about, github, linkedin, projects, weather, games, clear, mode' : 'all commands including echo, whoami, ls, cd, date, vi, vim, nvim, emacs, sudo'}`;
+        setHistory(modeInfo);
       } else {
         setHistory(output);
       }

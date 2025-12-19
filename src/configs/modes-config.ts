@@ -13,6 +13,7 @@ export const NORMAL_MODE_COMMANDS = [
   'weather',
   'games',
   'clear',
+  'mode',
 ];
 
 export const ADVANCED_MODE_COMMANDS = [

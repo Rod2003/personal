@@ -93,3 +93,9 @@ export const sudo = async (args?: string[]): Promise<string> => {
   return `Permission denied: with little power comes... no responsibility? `;
 };
 
+// Mode command - returns a special marker for mode display
+export const mode = async (args: string[]): Promise<string> => {
+  // This will be handled specially in the shell
+  return '__MODE_INFO__';
+};
+
