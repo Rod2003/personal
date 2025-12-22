@@ -42,7 +42,7 @@ const IndexPage: React.FC<IndexPageProps> = ({ inputRef }) => {
         <title>{config.title}</title>
       </Head>
 
-      <div className="p-2 sm:p-4 md:p-8 overflow-hidden h-full border-2 rounded border-yellow">
+      <div className="p-2 sm:p-4 md:px-8 overflow-hidden h-full border-2 rounded border-yellow relative">
         <div
           ref={containerRef}
           className="overflow-y-auto h-full overflow-x-hidden"
@@ -61,6 +61,10 @@ const IndexPage: React.FC<IndexPageProps> = ({ inputRef }) => {
             clearHistory={clearHistory}
           />
         </div>
+        {/* Top fade overlay */}
+        <div className="absolute top-0 left-0 right-0 h-2 pointer-events-none bg-gradient-to-b from-background/80 via-background/40 to-transparent z-10" />
+        {/* Bottom fade overlay */}
+        <div className="absolute bottom-0 left-0 right-0 h-2 pointer-events-none bg-gradient-to-t from-background/80 via-background/40 to-transparent z-10" />
       </div>
     </GameProvider>
   );
