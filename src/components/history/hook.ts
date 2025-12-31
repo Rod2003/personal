@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { History } from './interface';
 import { HelpCommandOutput } from '../../utils/shell';
 

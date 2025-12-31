@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import * as bin from './bin';
 import { CommandMode, isCommandAvailable } from '../configs/modes-config';
 import { commandDescriptions } from '../configs/command-descriptions';

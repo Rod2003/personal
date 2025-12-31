@@ -33,3 +33,6 @@ yarn-error.log*
 *.tsbuildinfo
 
 .gitattributes
+
+# temp
+example-project.md
