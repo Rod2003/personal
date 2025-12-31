@@ -90,7 +90,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateTicTacToe = (position: number): string => {
     if (ticTacToe.gameOver) {
-      return 'Game is over! Type "exit" to quit or "games tictactoe" to start a new game.';
+      return 'Game is over! Type "games tictactoe" to start a new game.';
     }
 
     const index = position - 1;
@@ -125,7 +125,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateNumberGame = (guess: number): string => {
     if (numberGame.gameOver) {
-      return 'Game is over! Type "exit" to quit or "games guess" to start a new game.';
+      return 'Game is over! Type "games guess" to start a new game.';
     }
 
     const newTriesLeft = numberGame.triesLeft - 1;

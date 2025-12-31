@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
+import { HelpCommandOutput } from '../../utils/shell';
 
 export interface History {
   id: number;
   date: Date;
   command: string;
-  output: string | ReactNode;
+  output: string | HelpCommandOutput;
 }

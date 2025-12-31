@@ -3,19 +3,10 @@
 import * as bin from './index';
 import config from '../../../config.json';
 
-// Help
+// Help - returns a special marker for React component rendering
 export const help = async (args: string[]): Promise<string> => {
-  const commands = Object.keys(bin).sort().join(', ');
-  var c = '';
-  for (let i = 1; i <= Object.keys(bin).sort().length; i++) {
-    c += Object.keys(bin).sort()[i - 1] + '\n';
-  }
-  return `Welcome! Here are all the available commands:
-\n${c}\n
-[tab]: trigger completion.
-[ctrl+l]/clear: clear terminal.\n
-Type 'sumfetch' to display summary.
-`;
+  // Return a special marker that will be intercepted by the shell
+  return '__HELP_COMPONENT__';
 };
 
 // About
@@ -25,29 +16,7 @@ I have a passion for building software products with visible impact.
 Welcome to my website!
 
 More about me:
-'sumfetch' - short summary.
-'resume' - my latest resume.
-'linkedin - my LinkedIn profile.`;
-};
-
-// Resume
-export const resume = async (args: string[]): Promise<string> => {
-  window.open(`${config.resume_url}`);
-  return 'Opening resume...';
-};
-
-// Donate
-export const donate = async (args: string[]): Promise<string> => {
-  return `thank you for your interest. 
-here is the way you can support my work:
-- <u><a class="text-blue underline" href="${config.donate_url}" target="_blank">buymeacoffee</a></u>
-`;
-};
-
-// Contact
-export const email = async (args: string[]): Promise<string> => {
-  window.open(`mailto:${config.email}`);
-  return `Opening mailto:${config.email}...`;
+'linkedin' - my LinkedIn profile.`;
 };
 
 export const github = async (args: string[]): Promise<string> => {
@@ -63,16 +32,6 @@ export const linkedin = async (args: string[]): Promise<string> => {
   return 'Opening linkedin...';
 };
 
-// Search
-export const google = async (args: string[]): Promise<string> => {
-  window.open(`https://google.com/search?q=${args.join(' ')}`);
-  return `Searching google for ${args.join(' ')}...`;
-};
-
-export const reddit = async (args: string[]): Promise<string> => {
-  window.open(`https://www.reddit.com/search/?q=${args.join(' ')}`);
-  return `Searching reddit for ${args.join(' ')}...`;
-};
 
 // Typical linux commands
 export const echo = async (args: string[]): Promise<string> => {
@@ -106,8 +65,7 @@ directories`;
 };
 
 export const cd = async (args: string[]): Promise<string> => {
-  return `unfortunately, i cannot afford more directories.
-if you want to help, you can type 'donate'.`;
+  return `unfortunately, i cannot afford more directories.`;
 };
 
 export const date = async (args: string[]): Promise<string> => {
@@ -135,39 +93,9 @@ export const sudo = async (args?: string[]): Promise<string> => {
   return `Permission denied: with little power comes... no responsibility? `;
 };
 
-// Banner
-export const banner = (args?: string[]): string => {
-  // Check if mobile (this will be evaluated on the client side)
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  
-  if (isMobile) {
-    return `
-<span class="text-2xl font-bold text-yellow">RODRIGO DEL AGUILA</span>
-
-Welcome to my website.
-
-Type 'help' to see the list of available commands.
-Type 'sumfetch' to display summary.
-`;
-  }
-  
-  return `
-██████╗  ██████╗ ██████╗ ██████╗ ██╗ ██████╗  ██████╗                    
-██╔══██╗██╔═══██╗██╔══██╗██╔══██╗██║██╔════╝ ██╔═══██╗                   
-██████╔╝██║   ██║██║  ██║██████╔╝██║██║  ███╗██║   ██║                   
-██╔══██╗██║   ██║██║  ██║██╔══██╗██║██║   ██║██║   ██║                   
-██║  ██║╚██████╔╝██████╔╝██║  ██║██║╚██████╔╝╚██████╔╝                   
-╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝                    
-                                                                         
-██████╗ ███████╗██╗          █████╗  ██████╗ ██╗   ██╗██╗██╗      █████╗ 
-██╔══██╗██╔════╝██║         ██╔══██╗██╔════╝ ██║   ██║██║██║     ██╔══██╗
-██║  ██║█████╗  ██║         ███████║██║  ███╗██║   ██║██║██║     ███████║
-██║  ██║██╔══╝  ██║         ██╔══██║██║   ██║██║   ██║██║██║     ██╔══██║
-██████╔╝███████╗███████╗    ██║  ██║╚██████╔╝╚██████╔╝██║███████╗██║  ██║
-╚═════╝ ╚══════╝╚══════╝    ╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═╝  ╚═╝
-                                                                         
-                                                                                                         
-Type 'help' to see the list of available commands.
-Type 'sumfetch' to display summary.
-`;
+// Mode command - returns a special marker for mode display
+export const mode = async (args: string[]): Promise<string> => {
+  // This will be handled specially in the shell
+  return '__MODE_INFO__';
 };
+

@@ -1,11 +1,24 @@
 import React, { ReactNode } from 'react';
 import * as bin from './bin';
+import { CommandMode, isCommandAvailable } from '../configs/modes-config';
+import { commandDescriptions } from '../configs/command-descriptions';
+
+// Special type for help command output
+export interface HelpCommandOutput {
+  __type: 'HELP_COMPONENT';
+  commands: Array<{ name: string; description: string }>;
+  onCommandClick?: (command: string) => void;
+}
 
 // Create a new function that uses the context
-export const createShell = () => {
+export const createShell = (
+  mode?: CommandMode,
+  onCommandClick?: (command: string) => void,
+  toggleMode?: () => void,
+) => {
   return async (
     command: string,
-    setHistory: (value: string | ReactNode) => void,
+    setHistory: (value: string | HelpCommandOutput) => void,
     clearHistory: () => void,
     setCommand: React.Dispatch<React.SetStateAction<string>>,
   ) => {
@@ -20,9 +33,47 @@ export const createShell = () => {
       setHistory(
         `shell: command not found: ${args[0]}. Try 'help' to get started.`,
       );
+    } else if (mode && !isCommandAvailable(args[0], mode)) {
+      setHistory(
+        `shell: command not available in ${mode} mode. Toggle advanced mode to access this command.`,
+      );
     } else {
       const output = await bin[args[0]](args.slice(1));
-      setHistory(output);
+      
+      // Check if this is the help command
+      if (output === '__HELP_COMPONENT__') {
+        // Filter commands based on current mode
+        const commands = Object.keys(bin)
+          .filter((name) => !mode || isCommandAvailable(name, mode))
+          .sort()
+          .map((name) => ({
+            name,
+            description: commandDescriptions[name] || 'No description available',
+          }));
+        
+        setHistory({
+          __type: 'HELP_COMPONENT',
+          commands,
+          onCommandClick,
+        });
+      } else if (output === '__MODE_INFO__') {
+        // Handle mode command
+        const currentMode = mode || 'normal';
+        const modeInfo = `Current mode: ${currentMode}
+        
+Available modes:
+  - normal: Essential site commands only
+  - advanced: All commands including bash CLI commands
+
+To toggle modes:
+  - Click the terminal icon in the top right corner
+  - Or use the keyboard shortcut (if available)
+
+Current mode commands: ${currentMode === 'normal' ? 'help, about, github, linkedin, projects, weather, games, clear, mode' : 'all commands including echo, whoami, ls, cd, date, vi, vim, nvim, emacs, sudo'}`;
+        setHistory(modeInfo);
+      } else {
+        setHistory(output);
+      }
     }
 
     setCommand('');
