@@ -105,7 +105,7 @@ export interface ProjectMetadata {
 }
 
 export const projectsMetadata: Record<string, ProjectMetadata> = {
-  'pario-web': {
+  'pario': {
     name: 'Pario',
     description: 'A B2B SaaS platform that helps automate internal workflows for consulting & education firms.',
     timeline: {
@@ -123,20 +123,19 @@ export const projectsMetadata: Record<string, ProjectMetadata> = {
       infrastructure: ['Vercel', 'Render'],
       tools: ['OpenAI (embeddings)'],
     },
-    achievements: [
-      'Scaled to 5-figure MRR within 5 months of official launch',
-      'Converted 50+ struggling internal programs into thriving relationship-building programs',
-      'Maintained 100% client satisfaction throughout evolution',
-      'Built 40,000+ lines of maintainable, type-safe code',
-      'Handled scale of 15+ organizations with 20-200 users each',
-    ],
+    // achievements: [
+    //   'Scaled to 5-figure MRR within 5 months of official launch',
+    //   'Converted 50+ struggling internal programs into thriving relationship-building programs',
+    //   'Maintained 100% client satisfaction throughout evolution',
+    //   'Built 40,000+ lines of maintainable, type-safe code',
+    //   'Handled scale of 15+ organizations with 20-200 users each',
+    // ],
     sections: [
       {
         title: 'Overview',
         content: [
           { type: 'image', image: parioWebHomepage, caption: 'Pario landing page (https://pario.so)' },
-          { type: 'text', content: 'Pario is a B2B SaaS platform that automates internal workflows for consulting and education firms, with a focus on program management and capacity tracking. What started as a student-tutor matching service in 2023 evolved into a fully customizable platform that allows organizations to design their own intake forms and matching workflows. By January 2025, Pario had officially launched and scaled to 5-figure MRR by May 2025, serving 15+ organizations with 20-200 users each.' },
-          { type: 'link', url: 'https://pario.so', text: 'Visit Pario', external: true },
+          { type: 'text', content: 'Pario is a B2B SaaS platform that automates internal workflows for consulting and education firms, with a focus on program management and capacity tracking. What started as a student-tutor matching service in 2023 evolved into a fully customizable platform that allows organizations to design their own intake forms and matching workflows.' },
         ],
       },
       {

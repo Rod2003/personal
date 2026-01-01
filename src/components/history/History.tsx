@@ -23,6 +23,9 @@ export const History: React.FC<{ history: Array<HistoryInterface> }> = ({
           onCommandClick={output.onCommandClick}
         />
       );
+    } else if (React.isValidElement(output)) {
+      // Handle React elements (e.g., from projects command)
+      return <div className="mb-2">{output}</div>;
     }
     return null;
   };

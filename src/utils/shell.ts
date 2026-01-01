@@ -18,7 +18,7 @@ export const createShell = (
 ) => {
   return async (
     command: string,
-    setHistory: (value: string | HelpCommandOutput) => void,
+    setHistory: (value: string | HelpCommandOutput | React.ReactElement) => void,
     clearHistory: () => void,
     setCommand: React.Dispatch<React.SetStateAction<string>>,
   ) => {
