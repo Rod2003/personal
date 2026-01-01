@@ -105,18 +105,14 @@ export interface ProjectMetadata {
 }
 
 export const projectsMetadata: Record<string, ProjectMetadata> = {
-  'pario': {
+  'pario-web': {
     name: 'Pario',
     description: 'A B2B SaaS platform that helps automate internal workflows for consulting & education firms.',
     timeline: {
       start: '2023',
       end: 'May 2025',
-      duration: 'Started as student-tutor matching in 2023, rebranded to Pario January 2025, scaled to 5-figure MRR by May 2025',
+      duration: 'Started as student-tutor matching in 2023, rebranded to Pario January 2025.',
     },
-    team: [
-      { name: 'You', role: 'Technical Founder' },
-      { name: 'Ashton Seebaran', role: 'Business & Operations' },
-    ],
     links: {
       website: 'https://pario.so',
     },
@@ -125,7 +121,7 @@ export const projectsMetadata: Record<string, ProjectMetadata> = {
       backend: ['Node.js', 'Flask', 'Python'],
       database: ['Supabase (PostgreSQL)', 'Pinecone'],
       infrastructure: ['Vercel', 'Render'],
-      tools: ['OpenAI (embeddings, GPT-4o)'],
+      tools: ['OpenAI (embeddings)'],
     },
     achievements: [
       'Scaled to 5-figure MRR within 5 months of official launch',
@@ -163,7 +159,7 @@ export const projectsMetadata: Record<string, ProjectMetadata> = {
             'Database: Supabase (PostgreSQL with JSONB, vector search)',
             'Vector DB: Pinecone',
             'Infrastructure: Vercel (frontend), Render (backend services)',
-            'AI: OpenAI (embeddings, GPT-4o)',
+            'AI: OpenAI (embeddings)',
           ]},
         ],
       },
@@ -435,7 +431,6 @@ const answer = completion.choices[0].message?.content || '';` },
             'Program management and capacity tracking dashboards',
             'Valence analysis for relationship quality insights',
             'Complete traceability and bias-free matching',
-            'Multi-tenant architecture supporting 15+ organizations simultaneously',
           ]},
         ],
       },
@@ -451,20 +446,6 @@ const answer = completion.choices[0].message?.content || '';` },
         content: [
           { type: 'text', content: 'Pario uses a lightweight, scalable stack optimized for fast iteration. The static web app is hosted on Vercel, while backend services (Flask matching service and Node.js APIs) run on Render. This serverless architecture allows us to experiment with new architectures and push code at an insanely fast rate while keeping infrastructure costs manageable.' },
           { type: 'text', content: 'The database is Supabase (PostgreSQL with JSONB support and vector search capabilities), and embeddings are stored in Pinecone for efficient similarity matching. This setup handles the scale of 15+ organizations with 20-200 users each, with synchronization and concurrency challenges addressed through the custom caching layer and async function patterns.' },
-        ],
-      },
-      {
-        title: 'Results & Impact',
-        content: [
-          { type: 'metrics', metrics: [
-            { label: 'MRR', value: '5-figure' },
-            { label: 'Organizations', value: '15+' },
-            { label: 'Users per Org', value: '20-200' },
-            { label: 'Programs Converted', value: '50+' },
-            { label: 'Client Satisfaction', value: '100%' },
-          ]},
-          { type: 'text', content: 'Pario has successfully converted over 50 struggling internal programs into thriving relationship-building programs that continue to trust the platform. The evolution from manual matching and Excel spreadsheets to complete traceability, AI-based matching, and RAG chat interface represents a significant transformation in how organizations manage their internal workflows.' },
-          { type: 'text', content: 'The technical challenges overcome include synchronization and concurrency at scale, customizable data storage with JSONB and strict typing, and real-time RAG updates. These solutions have enabled Pario to handle the complexity of multiple organizations with diverse matching requirements while maintaining 100% client satisfaction.' },
         ],
       },
     ],
