@@ -1,9 +1,9 @@
 import Head from 'next/head';
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import config from '../../config.json';
 import { Input } from '../components/input';
 import { useHistory } from '../components/history/hook';
-import { History } from '../components/history/history';
+import { History } from '../components/history/History';
 import { GameProvider } from '../contexts/game-context';
 import { ModeProvider, useMode } from '../contexts/mode-context';
 import { Terminal, TerminalSquare } from 'lucide-react';

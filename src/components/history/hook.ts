@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { History, HelpCommandOutput } from '../../types/terminal';
 
 export const useHistory = (defaultValue: Array<History>) => {
