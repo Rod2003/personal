@@ -1,5 +1,5 @@
 import React from 'react';
-import { MetricsBlock as MetricsBlockType } from '../../config/projects-config';
+import { MetricsBlock as MetricsBlockType } from '../../types/project';
 
 export const MetricsBlock: React.FC<{ block: MetricsBlockType }> = ({ block }) => {
   return (

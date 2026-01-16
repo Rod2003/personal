@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { ImageBlock as ImageBlockType } from '../../config/projects-config';
+import { ImageBlock as ImageBlockType } from '../../types/project';
 
 export const ImageBlock: React.FC<{ block: ImageBlockType }> = ({ block }) => {
   return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { History as HistoryInterface } from './interface';
+import { History as HistoryInterface } from '../../types/terminal';
 import { Ps1 } from '../Ps1';
 import TypeWriter from '../TypeWriter';
 import { HelpCommand } from '../HelpCommand';

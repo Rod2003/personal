@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListBlock as ListBlockType } from '../../config/projects-config';
+import { ListBlock as ListBlockType } from '../../types/project';
 
 export const ListBlock: React.FC<{ block: ListBlockType }> = ({ block }) => {
   const ListTag = block.style === 'numbered' ? 'ol' : 'ul';

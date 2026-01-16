@@ -1,10 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
-import { CommandMode } from '../configs/modes-config';
-
-interface ModeContextType {
-  mode: CommandMode;
-  toggleMode: () => void;
-}
+import { CommandMode } from '../types/command';
+import { ModeContextType } from '../types/context';
 
 const ModeContext = createContext<ModeContextType | undefined>(undefined);
 

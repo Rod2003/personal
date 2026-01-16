@@ -1,27 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-
-interface TicTacToeState {
-  board: string[];
-  currentPlayer: 'X' | 'O';
-  gameOver: boolean;
-  winner: string | null;
-}
-
-interface NumberGameState {
-  targetNumber: number;
-  triesLeft: number;
-  gameOver: boolean;
-}
-
-interface GameContextType {
-  currentGame: string | null;
-  ticTacToe: TicTacToeState;
-  numberGame: NumberGameState;
-  updateTicTacToe: (position: number) => string;
-  updateNumberGame: (guess: number) => string;
-  startGame: (game: string) => void;
-  exitGame: () => void;
-}
+import { TicTacToeState, NumberGameState, GameContextType } from '../types/game';
 
 // Helper function to check for winner
 const checkWinner = (board: string[]): string | null => {

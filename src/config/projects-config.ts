@@ -1,108 +1,10 @@
-import { StaticImageData } from 'next/image';
-import parioWebHomepage from '../assets/projects/pario-web-homepage.png';
-import parioWebProgram from '../assets/projects/pario-web-program.png';
-import parioWebCapacity from '../assets/projects/pario-web-capacity.png';
-import parioWebValence from '../assets/projects/pario-web-valence.png';
+import { ProjectMetadata } from '../types/project';
 
-// Content Block Types
-export interface ImageBlock {
-  type: 'image';
-  image: StaticImageData;
-  caption?: string;
-}
-
-export interface HeadingBlock {
-  type: 'heading';
-  level: 1 | 2 | 3;
-  text: string;
-}
-
-export interface TextBlock {
-  type: 'text';
-  content: string;
-}
-
-export interface ListBlock {
-  type: 'list';
-  style: 'bulleted' | 'numbered';
-  items: string[];
-}
-
-export interface CodeBlock {
-  type: 'code';
-  language: string;
-  code: string;
-}
-
-export interface LinkBlock {
-  type: 'link';
-  url: string;
-  text: string;
-  external?: boolean;
-}
-
-export interface DividerBlock {
-  type: 'divider';
-}
-
-export interface MetricsBlock {
-  type: 'metrics';
-  metrics: Array<{ label: string; value: string }>;
-}
-
-export type ContentBlock =
-  | ImageBlock
-  | HeadingBlock
-  | TextBlock
-  | ListBlock
-  | CodeBlock
-  | LinkBlock
-  | DividerBlock
-  | MetricsBlock;
-
-export interface ProjectSection {
-  title?: string;
-  content: ContentBlock[];
-}
-
-export interface ProjectMetadata {
-  repoName?: string;
-  name: string;
-  description: string;
-  sections: ProjectSection[];
-  timeline?: {
-    start: string;
-    end?: string;
-    duration?: string;
-  };
-  team?: Array<{
-    name: string;
-    role: string;
-  }>;
-  links?: {
-    website?: string;
-    github?: string;
-    demo?: string;
-    documentation?: string;
-  };
-  techStack?: {
-    frontend?: string[];
-    backend?: string[];
-    database?: string[];
-    infrastructure?: string[];
-    tools?: string[];
-  };
-  video?: {
-    url: string;
-    thumbnail?: StaticImageData;
-    caption?: string;
-  };
-  architecture?: {
-    image: StaticImageData;
-    caption?: string;
-  };
-  achievements?: string[];
-}
+const parioWebHomepage = '/assets/projects/pario-web-homepage.png';
+const parioWebProgram = '/assets/projects/pario-web-program.png';
+const parioWebCapacity = '/assets/projects/pario-web-capacity.png';
+const parioWebValence = '/assets/projects/pario-web-valence.png';
+const citeRiteDemo = '/assets/projects/cite-rite-demo.mp4';
 
 export const projectsMetadata: Record<string, ProjectMetadata> = {
   'pario': {
@@ -445,6 +347,255 @@ const answer = completion.choices[0].message?.content || '';` },
         content: [
           { type: 'text', content: 'Pario uses a lightweight, scalable stack optimized for fast iteration. The static web app is hosted on Vercel, while backend services (Flask matching service and Node.js APIs) run on Render. This serverless architecture allows us to experiment with new architectures and push code at an insanely fast rate while keeping infrastructure costs manageable.' },
           { type: 'text', content: 'The database is Supabase (PostgreSQL with JSONB support and vector search capabilities), and embeddings are stored in Pinecone for efficient similarity matching. This setup handles the scale of 15+ organizations with 20-200 users each, with synchronization and concurrency challenges addressed through the custom caching layer and async function patterns.' },
+        ],
+      },
+    ],
+  },
+  'citerite': {
+    name: 'CiteRite',
+    description: 'A citation reviewer that analyzes text for claims and displays relevant citations to help detect false claims in AI-generated text.',
+    techStack: {
+      frontend: ['React', 'Next.js', 'TypeScript'],
+      tools: ['Shadcn UI', 'Lucide Icons'],
+    },
+    sections: [
+      {
+        title: 'Overview',
+        content: [
+          { type: 'video', video: citeRiteDemo, caption: 'CiteRite demo - analyzing text for claims and citations' },
+          { type: 'text', content: 'CiteRite is a citation reviewer application that takes input text, extracts claims, and displays relevant citations for each claim. The tool helps detect false claims in AI-generated text by providing a visual interface to review which claims are supported by citations and which are not.' },
+          { type: 'text', content: 'The application provides two main views: a document view that highlights claims directly in the original text, and a hierarchical view that shows the parent-child relationships between claims. Users can click on any claim to view its associated citations in a side panel, making it easy to verify the accuracy of statements in a document.' },
+        ],
+      },
+      {
+        title: 'Architecture',
+        content: [
+          { type: 'text', content: 'CiteRite is built with React and Next.js, using a component-based architecture that separates concerns between text processing, UI rendering, and state management. The application receives scan results from an API that includes claims, citations, and their relationships.' },
+          { type: 'heading', level: 3, text: 'Component Structure' },
+          { type: 'list', style: 'bulleted', items: [
+            'DocumentViewer: Renders the original text with interactive claim highlighting',
+            'CitationPanel: Side panel showing citation details for selected claims',
+            'ClaimTree: Hierarchical accordion view of claims organized by parent-child relationships',
+            'Main Page: Orchestrates state management and coordinates between components',
+          ]},
+          { type: 'text', content: 'The core data flow involves segmenting the original text based on claim positions, mapping citations to claims, and rendering interactive UI elements that allow users to explore the relationship between text and its supporting evidence.' },
+        ],
+      },
+      {
+        title: 'Text Segmentation',
+        content: [
+          { type: 'text', content: 'The text segmentation utility maps claims to their positions in the original text, creating segments that alternate between plain text and claim regions. This enables precise highlighting and interaction.' },
+          { type: 'code', language: 'typescript', code: `export function segmentText(
+  originalText: string,
+  claims: Record<string, Claim>
+): TextSegment[] {
+  const segments: TextSegment[] = [];
+  const sortedClaims = Object.entries(claims)
+    .map(([id, claim]) => ({ id, ...claim }))
+    .sort((a, b) => a.start_index - b.start_index);
+
+  let currentIndex = 0;
+
+  for (const claim of sortedClaims) {
+    // Add non-claim text before this claim
+    if (claim.start_index > currentIndex) {
+      segments.push({
+        text: originalText.slice(currentIndex, claim.start_index),
+        claimId: null,
+        startIndex: currentIndex,
+        endIndex: claim.start_index,
+      });
+    }
+
+    // Add the claim segment
+    segments.push({
+      text: originalText.slice(claim.start_index, claim.end_index),
+      claimId: claim.id,
+      startIndex: claim.start_index,
+      endIndex: claim.end_index,
+    });
+
+    currentIndex = claim.end_index;
+  }
+
+  // Add remaining text after last claim
+  if (currentIndex < originalText.length) {
+    segments.push({
+      text: originalText.slice(currentIndex),
+      claimId: null,
+      startIndex: currentIndex,
+      endIndex: originalText.length,
+    });
+  }
+
+  return segments;
+}` },
+        ],
+      },
+      {
+        title: 'Claim Highlighting Logic',
+        content: [
+          { type: 'text', content: 'The highlighting system uses dynamic styling based on selection and hover states. Claims are visually distinguished with background colors, and citation counts are displayed as superscripts.' },
+          { type: 'code', language: 'typescript', code: `const getClaimStyle = (claimId: string) => {
+  const isSelected = selectedClaimId === claimId;
+  const isHovered = hoveredClaimId === claimId;
+
+  return {
+    backgroundColor: isSelected || isHovered 
+      ? 'var(--primary)' 
+      : 'color-mix(in oklch, var(--primary), transparent 85%)',
+    color: isSelected || isHovered ? 'var(--primary-foreground)' : 'inherit',
+    borderBottom: '2px solid var(--primary)',
+    cursor: 'pointer',
+    boxShadow: isSelected ? '0 0 0 2px var(--ring)' : 'none',
+  };
+};
+
+const renderSegment = (segment: TextSegment) => {
+  if (!segment.claimId) {
+    return segment.text; // Plain text
+  }
+
+  const claim = claims[segment.claimId];
+  const citations = claim?.relevant_citations || [];
+  const citationIds = citations.map(c => c.citation_id).join(',');
+  
+  // Render claim with highlighting and citation indicators
+  return {
+    text: segment.text,
+    style: getClaimStyle(segment.claimId),
+    citationCount: citations.length,
+    citationIds,
+  };
+};` },
+        ],
+      },
+      {
+        title: 'Citation Display Logic',
+        content: [
+          { type: 'text', content: 'Citations are displayed with expandable summaries and mapped to their associated claims. The logic handles text truncation and citation filtering.' },
+          { type: 'code', language: 'typescript', code: `// Expandable summary logic
+const [isExpanded, setIsExpanded] = useState(true);
+const displayText = citation.summary.length > SUMMARY_CHAR_LIMIT && !isExpanded 
+  ? citation.summary.slice(0, SUMMARY_CHAR_LIMIT) + '...' 
+  : citation.summary;
+
+// Map citations to selected claim
+const relevantCitations = claim.relevant_citations || [];
+const hasCitations = relevantCitations.length > 0;
+
+// Render citation cards with data
+relevantCitations.map((ref, index) => {
+  const citation = citations[ref.citation_id];
+  if (!citation) return null;
+  
+  return {
+    snippet: ref.snippet,
+    summary: displayText,
+    tags: citation.tags,
+    link: citation.link,
+    index,
+  };
+});` },
+        ],
+      },
+      {
+        title: 'Claim Hierarchy Logic',
+        content: [
+          { type: 'text', content: 'The hierarchy system identifies root claims and builds a tree structure from parent-child relationships. It also handles orphan claims that aren\'t referenced as children.' },
+          { type: 'code', language: 'typescript', code: `// Get root claims (no parents)
+export function getRootClaims(claims: Record<string, Claim>): string[] {
+  return Object.entries(claims)
+    .filter(([_, claim]) => claim.parent_claim_ids.length === 0)
+    .map(([id]) => id);
+}
+
+// Build complete tree including orphan claims
+const rootClaims = getRootClaims(claims);
+const allClaimIds = Object.keys(claims);
+const referencedAsChildren = new Set(
+  Object.values(claims).flatMap(c => c.children_claim_ids)
+);
+const orphanClaims = allClaimIds.filter(
+  id => !rootClaims.includes(id) && !referencedAsChildren.has(id)
+);
+
+const allRootIds = [...rootClaims, ...orphanClaims];
+
+// Recursive tree rendering logic
+const renderClaimNode = (claimId: string, depth: number) => {
+  const claim = claims[claimId];
+  const hasChildren = claim.children_claim_ids.length > 0;
+  const hasCitations = claim.relevant_citations.length > 0;
+  
+  if (!hasChildren) {
+    return { claimId, claimText: claim.claim_text, hasCitations };
+  }
+  
+  return {
+    claimId,
+    claimText: claim.claim_text,
+    hasCitations,
+    children: claim.children_claim_ids.map(childId => 
+      renderClaimNode(childId, depth + 1)
+    ),
+  };
+};` },
+        ],
+      },
+      {
+        title: 'State Management & Data Processing',
+        content: [
+          { type: 'text', content: 'The core logic handles API integration, claim index remapping, and state coordination. Key functions process scan results and ensure claims are correctly positioned in the original text.' },
+          { type: 'code', language: 'typescript', code: `// Remap claim indices to match actual positions in original text
+const remapClaimIndices = (response: ScanResponse, originalText: string): ScanResponse => {
+  const remappedClaims: Record<string, Claim> = {};
+  
+  for (const [id, claim] of Object.entries(response.document.claims)) {
+    if (!claim.claim_text) {
+      remappedClaims[id] = claim;
+      continue;
+    }
+    
+    // Find actual position of claim_text in original text
+    const actualIndex = originalText.indexOf(claim.claim_text);
+    
+    if (actualIndex !== -1) {
+      remappedClaims[id] = {
+        ...claim,
+        start_index: actualIndex,
+        end_index: actualIndex + claim.claim_text.length,
+      };
+    } else {
+      remappedClaims[id] = claim;
+    }
+  }
+  
+  return {
+    ...response,
+    document: { ...response.document, claims: remappedClaims },
+  };
+};
+
+// API integration and error handling
+const handleClickGo = async () => {
+  try {
+    if (!text.trim()) {
+      setError("Please enter some text to analyze");
+      return;
+    }
+    
+    setIsLoading(true);
+    const result = await postSourceScan(text);
+    const parsedResult = JSON.parse(result) as ScanResponse;
+    const remappedResult = remapClaimIndices(parsedResult, text);
+    setScanResult(remappedResult);
+  } catch (err) {
+    setError("Failed to analyze text. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};` },
         ],
       },
     ],

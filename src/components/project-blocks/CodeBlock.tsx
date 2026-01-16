@@ -1,5 +1,5 @@
 import React from 'react';
-import { CodeBlock as CodeBlockType } from '../../config/projects-config';
+import { CodeBlock as CodeBlockType } from '../../types/project';
 
 export const CodeBlock: React.FC<{ block: CodeBlockType }> = ({ block }) => {
   return (

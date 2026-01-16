@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
-import { History } from './interface';
-import { HelpCommandOutput } from '../../utils/shell';
+import { History, HelpCommandOutput } from '../../types/terminal';
 
 export const useHistory = (defaultValue: Array<History>) => {
   const [history, setHistory] = React.useState<Array<History>>(defaultValue);
