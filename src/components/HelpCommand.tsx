@@ -5,11 +5,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from './tooltip';
-
-interface CommandDescription {
-  name: string;
-  description: string;
-}
+import { CommandDescription } from '../types/terminal';
 
 interface HelpCommandProps {
   commands: CommandDescription[];

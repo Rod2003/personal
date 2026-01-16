@@ -1,12 +1,4 @@
-interface CacheEntry {
-    value: string;
-    timestamp: number;
-}
-  
-interface CacheConfig {
-    ttl: number;  // Time to live in milliseconds
-    maxEntries: number;
-}
+import { CacheEntry, CacheConfig } from '../types/cache';
 
 export class CommandCache {
     private cache: Map<string, CacheEntry>;

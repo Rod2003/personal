@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ProjectSection } from '../config/projects-config';
+import { ProjectSection } from '../types/project';
 import { BlockRenderer } from './project-blocks/BlockRenderer';
 
 interface ProjectProps {

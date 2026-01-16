@@ -1,5 +1,5 @@
 import React from 'react';
-import { LinkBlock as LinkBlockType } from '../../config/projects-config';
+import { LinkBlock as LinkBlockType } from '../../types/project';
 
 export const LinkBlock: React.FC<{ block: LinkBlockType }> = ({ block }) => {
   return (

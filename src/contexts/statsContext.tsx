@@ -1,15 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-
-interface TerminalStats {
-  commandCount: number;
-  lastCommand: string;
-  theme: string;
-}
-
-interface StatsContextType {
-  stats: TerminalStats;
-  updateStats: (command: string) => void;
-}
+import { TerminalStats, StatsContextType } from '../types/context';
 
 const StatsContext = createContext<StatsContextType | undefined>(undefined);
 

@@ -2,13 +2,7 @@ import React, { ReactNode } from 'react';
 import * as bin from './bin';
 import { CommandMode, isCommandAvailable } from '../configs/modes-config';
 import { commandDescriptions } from '../configs/command-descriptions';
-
-// Special type for help command output
-export interface HelpCommandOutput {
-  __type: 'HELP_COMPONENT';
-  commands: Array<{ name: string; description: string }>;
-  onCommandClick?: (command: string) => void;
-}
+import { HelpCommandOutput } from '../types/terminal';
 
 // Create a new function that uses the context
 export const createShell = (

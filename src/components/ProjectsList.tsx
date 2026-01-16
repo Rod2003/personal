@@ -1,30 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { ProjectAccordion } from './ProjectAccordion';
 import { getProjects } from '../utils/api';
-import { projectsMetadata, ProjectSection } from '../config/projects-config';
-
-interface GitHubRepo {
-  name: string;
-  description: string;
-  html_url: string;
-  stargazers_count: number;
-  fork: boolean;
-  archived: boolean;
-}
-
-interface ProjectData {
-  key: string;
-  name: string;
-  description: string;
-  stars?: number;
-  githubUrl?: string;
-  sections: ProjectSection[];
-}
+import { projectsMetadata } from '../config/projects-config';
+import { GitHubRepo, ProjectData } from '../types/github';
 
 export const ProjectsList: React.FC = () => {
   const [githubRepos, setGithubRepos] = useState<GitHubRepo[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProjects = async () => {

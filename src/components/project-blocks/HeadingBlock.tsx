@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeadingBlock as HeadingBlockType } from '../../config/projects-config';
+import { HeadingBlock as HeadingBlockType } from '../../types/project';
 
 export const HeadingBlock: React.FC<{ block: HeadingBlockType }> = ({ block }) => {
   const className = 'text-green font-semibold mb-2';

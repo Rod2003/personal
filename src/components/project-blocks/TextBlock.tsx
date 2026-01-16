@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextBlock as TextBlockType } from '../../config/projects-config';
+import { TextBlock as TextBlockType } from '../../types/project';
 
 export const TextBlock: React.FC<{ block: TextBlockType }> = ({ block }) => {
   return (

@@ -2,7 +2,10 @@
 // Normal mode: Essential site commands only
 // Advanced mode: All commands including bash CLI commands
 
-export type CommandMode = 'normal' | 'advanced';
+import { CommandMode } from '../types/command';
+
+// Re-export for backward compatibility
+export type { CommandMode };
 
 export const NORMAL_MODE_COMMANDS = [
   'help',
