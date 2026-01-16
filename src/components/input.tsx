@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { commandExists } from '../utils/commandExists';
+import { commandExists } from '../utils/command-exists';
 import { createShell } from '../utils/shell';
-import { handleTabCompletion } from '../utils/tabCompletion';
+import { handleTabCompletion } from '../utils/tab-completion';
 import { Ps1 } from './Ps1';
 import { Info } from 'lucide-react';
 import {
@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../components/dialog';
-import { useMode } from '../contexts/ModeContext';
+import { useMode } from '../contexts/mode-context';
 
 export const Input = ({
   inputRef,

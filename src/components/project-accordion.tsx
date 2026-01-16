@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ProjectSection } from '../types/project';
-import { BlockRenderer } from './project-blocks/BlockRenderer';
+import { BlockRenderer } from './project-blocks/block-renderer';
 
 interface ProjectProps {
   name: string;

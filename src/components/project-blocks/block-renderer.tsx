@@ -1,14 +1,14 @@
 import React from 'react';
 import { ContentBlock } from '../../types/project';
-import { ImageBlock } from './ImageBlock';
-import { HeadingBlock } from './HeadingBlock';
-import { TextBlock } from './TextBlock';
-import { ListBlock } from './ListBlock';
-import { CodeBlock } from './CodeBlock';
-import { LinkBlock } from './LinkBlock';
-import { DividerBlock } from './DividerBlock';
-import { MetricsBlock } from './MetricsBlock';
-import { VideoBlock } from './VideoBlock';
+import { ImageBlock } from './image-block';
+import { HeadingBlock } from './heading-block';
+import { TextBlock } from './text-block';
+import { ListBlock } from './list-block';
+import { CodeBlock } from './code-block';
+import { LinkBlock } from './link-block';
+import { DividerBlock } from './divider-block';
+import { MetricsBlock } from './metrics-block';
+import { VideoBlock } from './video-block';
 
 export const BlockRenderer: React.FC<{ block: ContentBlock }> = ({ block }) => {
   switch (block.type) {

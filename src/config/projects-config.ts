@@ -25,13 +25,6 @@ export const projectsMetadata: Record<string, ProjectMetadata> = {
       infrastructure: ['Vercel', 'Render'],
       tools: ['OpenAI (embeddings)'],
     },
-    // achievements: [
-    //   'Scaled to 5-figure MRR within 5 months of official launch',
-    //   'Converted 50+ struggling internal programs into thriving relationship-building programs',
-    //   'Maintained 100% client satisfaction throughout evolution',
-    //   'Built 40,000+ lines of maintainable, type-safe code',
-    //   'Handled scale of 15+ organizations with 20-200 users each',
-    // ],
     sections: [
       {
         title: 'Overview',

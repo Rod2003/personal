@@ -3,9 +3,9 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import config from '../../config.json';
 import { Input } from '../components/input';
 import { useHistory } from '../components/history/hook';
-import { History } from '../components/history/History';
-import { GameProvider } from '../contexts/GameContext';
-import { ModeProvider, useMode } from '../contexts/ModeContext';
+import { History } from '../components/history/history';
+import { GameProvider } from '../contexts/game-context';
+import { ModeProvider, useMode } from '../contexts/mode-context';
 import { Terminal, TerminalSquare } from 'lucide-react';
 import {
   Tooltip,

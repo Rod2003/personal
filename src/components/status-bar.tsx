@@ -1,6 +1,6 @@
 // StatusBar.tsx
 import React, { useState, useEffect } from 'react';
-import { useStats } from '../contexts/statsContext';
+import { useStats } from '../contexts/stats-context';
 
 const StatusBar = () => {
   const { stats } = useStats();

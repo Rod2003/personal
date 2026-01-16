@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import * as bin from './bin';
-import { CommandMode, isCommandAvailable } from '../configs/modes-config';
-import { commandDescriptions } from '../configs/command-descriptions';
+import { CommandMode, isCommandAvailable } from '../config/modes-config';
+import { commandDescriptions } from '../config/command-descriptions';
 import { HelpCommandOutput } from '../types/terminal';
 
 // Create a new function that uses the context

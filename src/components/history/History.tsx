@@ -1,8 +1,8 @@
 import React from 'react';
 import { History as HistoryInterface } from '../../types/terminal';
 import { Ps1 } from '../Ps1';
-import TypeWriter from '../TypeWriter';
-import { HelpCommand } from '../HelpCommand';
+import TypeWriter from '../type-writer';
+import { HelpCommand } from '../help-command';
 
 export const History: React.FC<{ history: Array<HistoryInterface> }> = ({
   history,

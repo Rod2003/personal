@@ -1,5 +1,5 @@
 import * as bin from './bin';
-import { CommandMode, isCommandAvailable } from '../configs/modes-config';
+import { CommandMode, isCommandAvailable } from '../config/modes-config';
 
 export const commandExists = (command: string, mode?: CommandMode) => {
   const commands = ['clear', ...Object.keys(bin)];

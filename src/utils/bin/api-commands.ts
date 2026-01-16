@@ -3,7 +3,7 @@
 import React from 'react';
 import { getQuote } from '../api';
 import { getWeather } from '../api';
-import { ProjectsList } from '../../components/ProjectsList';
+import { ProjectsList } from '../../components/projects-list';
 
 export const projects = async (args: string[]): Promise<React.ReactElement> => {
   return React.createElement(ProjectsList);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ProjectAccordion } from './ProjectAccordion';
+import { ProjectAccordion } from './project-accordion';
 import { getProjects } from '../utils/api';
 import { projectsMetadata } from '../config/projects-config';
 import { GitHubRepo, ProjectData } from '../types/github';
