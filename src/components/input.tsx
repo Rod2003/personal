@@ -107,7 +107,7 @@ export const Input = ({
   };
 
   return (
-    <div className="sticky bottom-0 bg-background flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0 border-[1px] rounded border-white p-2 mr-0 sm:mr-2 z-20">
+    <div className="sticky bottom-0 bg-background flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0 border-[1px] rounded-lg border-white p-2 mr-0 sm:mr-2 z-20">
       <div className="flex w-full justify-between items-center gap-2">
         <div className="flex flex-row space-x-1 sm:space-x-2 w-full min-w-0">
           <label htmlFor="prompt" className="flex-shrink-0 text-xs sm:text-base">

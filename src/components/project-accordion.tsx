@@ -21,12 +21,12 @@ export const ProjectAccordion: React.FC<ProjectProps> = ({
 
   return (
     <div
-      className="mb-3 border border-gray rounded p-2"
+      className="mb-3 border border-gray rounded-lg p-2"
       style={{ borderColor: '#A89BB9' }}
     >
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className={`select-none cursor-pointer ${isOpen ? 'sticky top-0 bg-background z-20 -m-2 p-2 rounded-t border-b' : ''}`}
+        className={`select-none cursor-pointer ${isOpen ? 'sticky top-0 bg-background z-20 p-2 rounded-t border-b' : ''}`}
         style={{ outline: 'none', borderColor: isOpen ? '#A89BB9' : undefined }}
       >
         <div className="flex items-start justify-between">
@@ -74,7 +74,7 @@ export const ProjectAccordion: React.FC<ProjectProps> = ({
           {sections.map((section, sectionIdx) => (
             <div key={sectionIdx} className="mb-4">
               {section.title && (
-                <h3 className="text-green font-semibold text-lg mb-3">
+                <h3 className="font-semibold text-lg mb-3">
                   {section.title}
                 </h3>
               )}

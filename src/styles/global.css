@@ -10,13 +10,13 @@
 
 /* Mocha theme CSS variables */
 :root {
-  --mocha-background: #3B3228;
-  --mocha-foreground: #D0C8C6;
-  --mocha-yellow: #F4BC87;
-  --mocha-green: #BEB55B;
-  --mocha-gray: #A89BB9;
-  --mocha-blue: #8AB3B5;
-  --mocha-red: #CB6077;
+  --mocha-background: #2B2420;
+  --mocha-foreground: #C4BCB8;
+  --mocha-yellow: #9B7653;
+  --mocha-green: #A89E4D;
+  --mocha-gray: #7A6E5D;
+  --mocha-blue: #6B9799;
+  --mocha-red: #B34F63;
 }
 
 * {

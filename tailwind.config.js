@@ -1,13 +1,13 @@
 // Mocha dark theme colors
 const mochaColors = {
-  background: '#3B3228',
-  foreground: '#D0C8C6',
+  background: '#2B2420',
+  foreground: '#C4BCB8',
   white: '#FFFFFF',
-  yellow: '#F4BC87',
-  green: '#BEB55B',
-  gray: '#A89BB9',
-  blue: '#8AB3B5',
-  red: '#CB6077',
+  yellow: '#9B7653',
+  green: '#A89E4D',
+  gray: '#7A6E5D',
+  blue: '#6B9799',
+  red: '#B34F63',
 };
 
 module.exports = {

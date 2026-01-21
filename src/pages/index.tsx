@@ -24,7 +24,7 @@ const getBanner = (): string => {
   
   if (isMobile) {
     return `
-<span class="text-2xl font-bold text-yellow">RODRIGO DEL AGUILA</span>
+RODRIGO DEL AGUILA
 
 Welcome to my website.
 
@@ -84,8 +84,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
         <title>{config.title}</title>
       </Head>
 
-      <div className="p-2 sm:p-4 md:p-8 overflow-hidden h-full border-2 rounded border-yellow relative">
-        {/* Mode Toggle Button */}
+      <div className="p-2 sm:p-4 md:p-8 overflow-hidden h-full border rounded-xl border-yellow relative">
         <div className="absolute top-2 right-2 z-10">
           <TooltipProvider>
             <Tooltip delayDuration={100}>
@@ -128,9 +127,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
             clearHistory={clearHistory}
           />
         </div>
-        {/* Top fade overlay */}
         <div className="absolute top-0 left-0 right-0 h-2 pointer-events-none bg-gradient-to-b from-background/80 via-background/40 to-transparent z-10" />
-        {/* Bottom fade overlay */}
         <div className="absolute bottom-0 left-0 right-0 h-2 pointer-events-none bg-gradient-to-t from-background/80 via-background/40 to-transparent z-10" />
       </div>
     </>
