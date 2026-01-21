@@ -151,7 +151,9 @@ export const Input: React.FC<InputProps> = ({
 
   // Render keyboard shortcuts based on state
   const renderShortcuts = () => {
-    if (startupMode || disableInput) return null;
+    // Don't show shortcuts on mobile devices
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    if (startupMode || disableInput || isMobile) return null;
 
     if (!isFocused) {
       return (
