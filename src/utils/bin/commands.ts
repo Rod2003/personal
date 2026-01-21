@@ -11,11 +11,14 @@ export const help = async (args: string[]): Promise<string> => {
 // About
 export const about = async (args: string[]): Promise<string> => {
   return `Hi, I'm ${config.name}.
-I have a passion for building software products with visible impact. 
-Welcome to my website!
+
+Peruvian born, Canadian raised.
+
+I'm an Ex-Founder and Software Engineer.
 
 More about me:
-'linkedin' - my LinkedIn profile.`;
+'linkedin' - my LinkedIn profile.
+'github' - my GitHub profile.`;
 };
 
 export const github = async (args: string[]): Promise<string> => {
@@ -96,5 +99,13 @@ export const sudo = async (args?: string[]): Promise<string> => {
 export const mode = async (args: string[]): Promise<string> => {
   // This will be handled specially in the shell
   return '__MODE_INFO__';
+};
+
+// Hidden restart command
+export const rodrodrod = async (args: string[]): Promise<string> => {
+  if (args[0] === 'start') {
+    return '__RESTART__';
+  }
+  return `rodrodrod: unknown command '${args[0]}'`;
 };
 

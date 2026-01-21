@@ -17,6 +17,7 @@ export const NORMAL_MODE_COMMANDS = [
   'games',
   'clear',
   'mode',
+  'rodrodrod start', // Hidden restart command
 ];
 
 export const ADVANCED_MODE_COMMANDS = [

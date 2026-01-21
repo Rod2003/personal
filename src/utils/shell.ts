@@ -39,6 +39,7 @@ export const createShell = (
         // Filter commands based on current mode
         const commands = Object.keys(bin)
           .filter((name) => !mode || isCommandAvailable(name, mode))
+          .filter((name) => name !== 'rodrodrod') // Hide rodrodrod from help
           .sort()
           .map((name) => ({
             name,
@@ -65,6 +66,33 @@ To toggle modes:
 
 Current mode commands: ${currentMode === 'normal' ? 'help, about, github, linkedin, projects, weather, games, clear, mode' : 'all commands including echo, whoami, ls, cd, date, vi, vim, nvim, emacs, sudo'}`;
         setHistory(modeInfo);
+      } else if (output === '__RESTART__') {
+        // Handle restart command - clear and show banner
+        clearHistory();
+        const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+        const banner = isMobile ? `
+Welcome to my website.
+
+Type 'help' to see the list of available commands.
+` : `
+██████╗  ██████╗ ██████╗ ██████╗ ██╗ ██████╗  ██████╗                    
+██╔══██╗██╔═══██╗██╔══██╗██╔══██╗██║██╔════╝ ██╔═══██╗                   
+██████╔╝██║   ██║██║  ██║██████╔╝██║██║  ███╗██║   ██║                   
+██╔══██╗██║   ██║██║  ██║██╔══██╗██║██║   ██║██║   ██║                   
+██║  ██║╚██████╔╝██████╔╝██║  ██║██║╚██████╔╝╚██████╔╝                   
+╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝                    
+                                                                         
+██████╗ ███████╗██╗          █████╗  ██████╗ ██╗   ██╗██╗██╗      █████╗ 
+██╔══██╗██╔════╝██║         ██╔══██╗██╔════╝ ██║   ██║██║██║     ██╔══██╗
+██║  ██║█████╗  ██║         ███████║██║  ███╗██║   ██║██║██║     ███████║
+██║  ██║██╔══╝  ██║         ██╔══██║██║   ██║██║   ██║██║██║     ██╔══██║
+██████╔╝███████╗███████╗    ██║  ██║╚██████╔╝╚██████╔╝██║███████╗██║  ██║
+╚═════╝ ╚══════╝╚══════╝    ╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═╝  ╚═╝
+                                                                         
+                                                                                                         
+Type 'help' to see the list of available commands.
+`;
+        setHistory(banner);
       } else {
         setHistory(output);
       }

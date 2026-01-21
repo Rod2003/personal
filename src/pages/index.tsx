@@ -70,8 +70,10 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
   }, [init]);
 
   useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo(0, containerRef.current.scrollHeight);
+    }
     if (inputRef.current) {
-      inputRef.current.scrollIntoView();
       inputRef.current.focus({ preventScroll: true });
     }
   }, [history]);
@@ -82,7 +84,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
         <title>{config.title}</title>
       </Head>
 
-      <div className="p-2 sm:p-4 md:p-8 overflow-hidden h-full border rounded-xl border-yellow relative">
+      <div className="p-2 sm:p-4 md:p-8 h-full border rounded-xl border-yellow relative flex flex-col">
         <div className="absolute top-2 right-2 z-10">
           <TooltipProvider>
             <Tooltip delayDuration={100}>
@@ -107,12 +109,18 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
           </TooltipProvider>
         </div>
 
-        <div
-          ref={containerRef}
-          className="overflow-y-auto h-full overflow-x-hidden"
-        >
-          <History history={history} />
+        <div className="relative flex-1 overflow-hidden">
+          <div
+            ref={containerRef}
+            className="overflow-y-auto h-full overflow-x-hidden pb-2"
+          >
+            <History history={history} />
+          </div>
+          <div className="absolute top-0 left-0 right-0 h-2 pointer-events-none bg-gradient-to-b from-background/60 via-background/30 to-transparent z-10" />
+          <div className="absolute bottom-0 left-0 right-0 h-4 pointer-events-none bg-gradient-to-t from-background via-background/60 to-transparent z-10" />
+        </div>
 
+        <div className="flex-shrink-0 relative z-20 mt-2">
           <Input
             inputRef={inputRef}
             containerRef={containerRef}
@@ -125,8 +133,6 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
             clearHistory={clearHistory}
           />
         </div>
-        <div className="absolute top-0 left-0 right-0 h-2 pointer-events-none bg-gradient-to-b from-background/80 via-background/40 to-transparent z-10" />
-        <div className="absolute bottom-0 left-0 right-0 h-2 pointer-events-none bg-gradient-to-t from-background/80 via-background/40 to-transparent z-10" />
       </div>
     </>
   );
