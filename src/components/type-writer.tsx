@@ -9,7 +9,7 @@ interface TypeWriterProps {
 
 const TypeWriter: React.FC<TypeWriterProps> = ({ 
   text, 
-  speed = 50, 
+  speed = 75, 
   className = '', 
   onComplete 
 }) => {
@@ -23,9 +23,6 @@ const TypeWriter: React.FC<TypeWriterProps> = ({
       const timeoutId = setTimeout(() => {
         setDisplayedText(prev => prev + text[currentIndex]);
         setCurrentIndex(prev => prev + 1);
-        
-        // Add random variation to typing speed
-        const variation = Math.random() * 25;
         
         // Pause briefly at punctuation
         if (['.', '!', '?', '\n'].includes(text[currentIndex])) {
