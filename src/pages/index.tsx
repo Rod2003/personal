@@ -24,8 +24,6 @@ const getBanner = (): string => {
   
   if (isMobile) {
     return `
-RODRIGO DEL AGUILA
-
 Welcome to my website.
 
 Type 'help' to see the list of available commands.
