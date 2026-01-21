@@ -15,6 +15,7 @@ import {
 } from '../components/tooltip';
 import TypeWriter from '../components/type-writer';
 import { startupText } from '../utils/startup-text-loader';
+import { CommandCards } from '../components/command-cards';
 
 interface IndexPageProps {
   inputRef: React.MutableRefObject<HTMLInputElement>;
@@ -54,6 +55,7 @@ Type 'help' to see the list of available commands.
 
 const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
   const containerRef = useRef(null);
+  const hasInitialized = useRef(false);
   const { mode, toggleMode } = useMode();
   const {
     history,
@@ -70,6 +72,17 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
   const [typedCommand, setTypedCommand] = useState('');
   const [showPulse, setShowPulse] = useState(false);
   const [bootTextComplete, setBootTextComplete] = useState(false);
+
+  // Handler for when a command card is clicked
+  const handleCommandCardClick = useCallback((cmd: string) => {
+    setCommand(cmd);
+    // Use setTimeout to ensure focus happens after state update and re-render
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 0);
+  }, [setCommand, inputRef]);
 
   // After 100ms, start typing command
   useEffect(() => {
@@ -122,13 +135,25 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
   }, [startupStage, bootTextComplete]);
 
   // Initialize normal view
-  const init = useCallback(() => setHistory(getBanner()), []);
+  const init = useCallback(() => {
+    if (!hasInitialized.current) {
+      setHistory(getBanner());
+      hasInitialized.current = true;
+    }
+  }, [setHistory]);
 
   useEffect(() => {
     if (startupStage === 5) {
       init();
     }
   }, [startupStage, init]);
+
+  // Add command cards after banner is set
+  useEffect(() => {
+    if (startupStage === 5 && history.length === 1 && hasInitialized.current) {
+      setHistory(<CommandCards onCommandClick={handleCommandCardClick} />);
+    }
+  }, [startupStage, history.length, setHistory, handleCommandCardClick]);
 
   // Auto-scroll on history updates (but don't auto-focus)
   useEffect(() => {

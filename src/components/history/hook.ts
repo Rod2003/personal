@@ -10,7 +10,7 @@ export const useHistory = (defaultValue: Array<History>) => {
     history,
     command,
     lastCommandIndex,
-    setHistory: (value: string | HelpCommandOutput) =>
+    setHistory: (value: string | HelpCommandOutput | React.ReactElement) =>
       setHistory([
         ...history,
         {
