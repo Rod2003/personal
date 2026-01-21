@@ -10,6 +10,7 @@ export type { CommandMode };
 export const NORMAL_MODE_COMMANDS = [
   'help',
   'about',
+  'grep',
   'github',
   'linkedin',
   'projects',

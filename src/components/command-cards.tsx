@@ -25,8 +25,8 @@ export const CommandCards: React.FC<CommandCardsProps> = ({ onCommandClick }) =>
     },
     {
       icon: <Sparkles className="w-5 h-5" />,
-      command: 'ask ai',
-      description: 'Ask anything',
+      command: 'grep',
+      description: 'Ask AI anything',
     },
   ];
 

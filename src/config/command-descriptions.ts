@@ -1,5 +1,6 @@
 export const commandDescriptions: Record<string, string> = {
   about: "Learn more about me and my background",
+  grep: "Ask me anything using AI (usage: grep [your question])",
   cd: "Change directory (just kidding, it's a fun response)",
   date: "Display the current date and time",
   echo: "Print text to the terminal",
