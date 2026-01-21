@@ -11,13 +11,13 @@ export const VideoBlock: React.FC<{ block: VideoBlockType }> = ({ block }) => {
         muted
         loop
         playsInline
-        className="rounded border border-gray h-auto mx-auto"
-        style={{ borderColor: '#A89BB9', width: '75%', height: 'auto', maxWidth: '100%' }}
+        className="rounded h-auto mx-auto"
+        style={{ width: '75%', height: 'auto', maxWidth: '100%' }}
       >
         Your browser does not support the video tag.
       </video>
       {block.caption && (
-        <p className="text-foreground text-sm mt-2 italic text-center">
+        <p className="text-foreground text-sm italic text-center">
           {block.caption}
         </p>
       )}

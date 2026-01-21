@@ -1,21 +1,19 @@
 import React from 'react';
-import Image from 'next/image';
 import { ImageBlock as ImageBlockType } from '../../types/project';
 
 export const ImageBlock: React.FC<{ block: ImageBlockType }> = ({ block }) => {
+  const imageSrc = typeof block.image === 'string' ? block.image : block.image.src;
+  
   return (
     <div className="mb-4">
-      <Image
-        src={block.image}
+      <img
+        src={imageSrc}
         alt={block.caption || 'Project screenshot'}
-        width={0}
-        height={0}
-        sizes="100vw"
-        className="rounded border border-gray w-full h-auto"
-        style={{ borderColor: '#A89BB9', width: '100%', height: 'auto' }}
+        className="rounded h-auto mx-auto"
+        style={{ width: '75%', height: 'auto', maxWidth: '100%' }}
       />
       {block.caption && (
-        <p className="text-foreground text-sm mt-2 italic text-center">
+        <p className="text-foreground text-sm italic text-center">
           {block.caption}
         </p>
       )}
