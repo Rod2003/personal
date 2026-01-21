@@ -4,6 +4,7 @@ import React from 'react';
 import { getQuote } from '../api';
 import { getWeather } from '../api';
 import { ProjectsList } from '../../components/projects-list';
+import { AskAIResponse } from '../../components/ask-ai-response';
 
 export const projects = async (args: string[]): Promise<React.ReactElement> => {
   return React.createElement(ProjectsList);
@@ -25,4 +26,19 @@ export const weather = async (args: string[]): Promise<string> => {
     '',
   );
   return newWeather;
+};
+
+export const grep = async (args: string[]): Promise<React.ReactElement | string> => {
+  const query = args.join(' ');
+  
+  if (!query) {
+    return `Usage: grep <your question>
+
+Examples:
+  grep Which tech stack do you normally work with?
+  grep Summarize your past experience
+  grep Tell me about your background`;
+  }
+  
+  return React.createElement(AskAIResponse, { query });
 };
