@@ -130,17 +130,28 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
     }
   }, [startupStage, init]);
 
-  // Auto-scroll on history updates (only after animation)
+  // Auto-scroll on history updates (but don't auto-focus)
   useEffect(() => {
     if (startupStage === 5) {
       if (containerRef.current) {
         containerRef.current.scrollTo(0, containerRef.current.scrollHeight);
       }
-      if (inputRef.current) {
-        inputRef.current.focus({ preventScroll: true });
-      }
     }
   }, [history, startupStage]);
+
+  // Don't auto-focus - let input start unfocused
+  // User can focus by clicking or pressing Tab
+
+  // Handle clicking outside input to blur
+  const handleContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    const isInsideInputWrapper = target.closest('.input-wrapper');
+    // If clicking outside the input's parent container, blur the input
+    if (inputRef.current && !isInsideInputWrapper) {
+      e.stopPropagation();
+      inputRef.current.blur();
+    }
+  };
 
   // Show only Input component (isolated, no border)
   if (startupStage < 4) {
@@ -179,7 +190,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
           <title>{config.title}</title>
         </Head>
 
-        <div className="p-2 sm:p-4 md:p-8 h-full border rounded-xl border-yellow relative flex flex-col">
+        <div className="p-2 sm:p-4 md:p-8 md:pb-z[10px]z h-full border rounded-xl border-yellow relative flex flex-col">
           <div className="relative flex-1 overflow-hidden">
             <div
               ref={containerRef}
@@ -196,7 +207,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
             <div className="absolute bottom-0 left-0 right-0 h-4 pointer-events-none bg-gradient-to-t from-background via-background/60 to-transparent z-10" />
           </div>
 
-          <div className="flex-shrink-0 relative z-20 mt-2">
+          <div className="flex-shrink-0 relative z-20 mt-2 input-wrapper">
             <Input
               inputRef={inputRef}
               containerRef={containerRef}
@@ -222,7 +233,10 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
         <title>{config.title}</title>
       </Head>
 
-      <div className="p-2 sm:p-4 md:p-8 h-full border rounded-xl border-yellow relative flex flex-col">
+      <div 
+        className="p-2 sm:p-4 md:p-8 md:pb-[10px] h-full border rounded-xl border-yellow relative flex flex-col"
+        onClick={handleContainerClick}
+      >
         <div className="absolute top-2 right-2 z-10">
           <TooltipProvider>
             <Tooltip delayDuration={100}>
@@ -247,10 +261,14 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
           </TooltipProvider>
         </div>
 
-        <div className="relative flex-1 overflow-hidden">
+        <div 
+          className="relative flex-1 overflow-hidden"
+          onClick={handleContainerClick}
+        >
           <div
             ref={containerRef}
             className="overflow-y-auto h-full overflow-x-hidden pb-2"
+            onClick={handleContainerClick}
           >
             <History history={history} />
           </div>
@@ -258,7 +276,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
           <div className="absolute bottom-0 left-0 right-0 h-4 pointer-events-none bg-gradient-to-t from-background via-background/60 to-transparent z-10" />
         </div>
 
-        <div className="flex-shrink-0 relative z-20 mt-2">
+        <div className="flex-shrink-0 relative z-20 mt-2 input-wrapper">
           <Input
             inputRef={inputRef}
             containerRef={containerRef}
