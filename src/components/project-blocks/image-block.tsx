@@ -13,7 +13,7 @@ export const ImageBlock: React.FC<{ block: ImageBlockType }> = ({ block }) => {
         style={{ width: '75%', height: 'auto', maxWidth: '100%' }}
       />
       {block.caption && (
-        <p className="text-foreground text-sm italic text-center">
+        <p className="text-foreground text-sm pt-2 italic text-center">
           {block.caption}
         </p>
       )}

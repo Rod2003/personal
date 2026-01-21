@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Hack';
-  src: url(/assets/fonts/Hack-NF.ttf);
+  font-family: 'VGA';
+  src: url(/assets/fonts/Px437_ACM_VGA_8x16.ttf);
   display: swap;
 }
 
@@ -20,7 +20,7 @@
 }
 
 * {
-  font-family: 'Hack', monospace;
+  font-family: 'VGA', monospace;
 }
 
 html,

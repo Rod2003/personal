@@ -6,7 +6,7 @@ export const ListBlock: React.FC<{ block: ListBlockType }> = ({ block }) => {
   const listClassName = block.style === 'numbered' ? 'list-decimal ml-6' : '';
   
   return (
-    <ListTag className={`text-foreground mb-3 ${listClassName}`}>
+    <ListTag className={`text-foreground mb-3 font-light ${listClassName}`}>
       {block.items.map((item, idx) => (
         <div key={idx} className="mb-1">
           {block.style === 'bulleted' && '• '}

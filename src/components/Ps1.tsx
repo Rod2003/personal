@@ -11,7 +11,7 @@ export const Ps1 = () => {
       <span className="text-green">
         {config.ps1_hostname}
       </span>
-      <span className="text-gray">:$ ~ </span>
+      <span className="text-gray">:$ </span>
     </div>
   );
 };

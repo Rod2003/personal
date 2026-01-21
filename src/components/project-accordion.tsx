@@ -46,7 +46,7 @@ export const ProjectAccordion: React.FC<ProjectProps> = ({
                   <span className="ml-2">⭐ {stars}</span>
                 )}
               </div>
-              <div className="text-foreground text-sm mt-1">
+              <div className="text-foreground text-sm mt-1 font-light">
                 {description.split('.')[0]}.
               </div>
             </div>

@@ -1,6 +1,5 @@
 // List of commands that do not require API calls
 
-import * as bin from './index';
 import config from '../../../config.json';
 
 // Help - returns a special marker for React component rendering
