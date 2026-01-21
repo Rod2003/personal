@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import config from '../../config.json';
 import { Input } from '../components/input';
 import { useHistory } from '../components/history/hook';
@@ -13,6 +13,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../components/tooltip';
+import TypeWriter from '../components/type-writer';
+import { startupText } from '../utils/startup-text-loader';
 
 interface IndexPageProps {
   inputRef: React.MutableRefObject<HTMLInputElement>;
@@ -63,21 +65,157 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
     setLastCommandIndex,
   } = useHistory([]);
 
+  // Startup animation state
+  const [startupStage, setStartupStage] = useState(1);
+  const [typedCommand, setTypedCommand] = useState('');
+  const [showPulse, setShowPulse] = useState(false);
+  const [bootTextComplete, setBootTextComplete] = useState(false);
+
+  // After 100ms, start typing command
+  useEffect(() => {
+    if (startupStage === 1) {
+      const timer = setTimeout(() => {
+        setStartupStage(2);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [startupStage]);
+
+  // Type "rodrodrod start" character by character
+  useEffect(() => {
+    if (startupStage === 2) {
+      const fullCommand = 'rodrodrod start';
+      let currentIndex = 0;
+      
+      const typeInterval = setInterval(() => {
+        if (currentIndex < fullCommand.length) {
+          setTypedCommand(fullCommand.substring(0, currentIndex + 1));
+          currentIndex++;
+        } else {
+          clearInterval(typeInterval);
+          // Move to stage 3
+          setStartupStage(3);
+        }
+      }, 20);
+      
+      return () => clearInterval(typeInterval);
+    }
+  }, [startupStage]);
+
+  // Pulse animation
+  useEffect(() => {
+    if (startupStage === 3) {
+      setShowPulse(true);
+      const timer = setTimeout(() => {
+        setShowPulse(false);
+        setStartupStage(4);
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [startupStage]);
+
+  // When boot text completes, show banner
+  useEffect(() => {
+    if (startupStage === 4 && bootTextComplete) {
+      setStartupStage(5);
+    }
+  }, [startupStage, bootTextComplete]);
+
+  // Initialize normal view
   const init = useCallback(() => setHistory(getBanner()), []);
 
   useEffect(() => {
-    init();
-  }, [init]);
+    if (startupStage === 5) {
+      init();
+    }
+  }, [startupStage, init]);
 
+  // Auto-scroll on history updates (only after animation)
   useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTo(0, containerRef.current.scrollHeight);
+    if (startupStage === 5) {
+      if (containerRef.current) {
+        containerRef.current.scrollTo(0, containerRef.current.scrollHeight);
+      }
+      if (inputRef.current) {
+        inputRef.current.focus({ preventScroll: true });
+      }
     }
-    if (inputRef.current) {
-      inputRef.current.focus({ preventScroll: true });
-    }
-  }, [history]);
+  }, [history, startupStage]);
 
+  // Show only Input component (isolated, no border)
+  if (startupStage < 4) {
+    return (
+      <>
+        <Head>
+          <title>{config.title}</title>
+        </Head>
+
+        <div className="h-full flex items-center justify-center">
+          <Input
+            inputRef={inputRef}
+            containerRef={containerRef}
+            command={command}
+            history={history}
+            lastCommandIndex={lastCommandIndex}
+            setCommand={setCommand}
+            setHistory={setHistory}
+            setLastCommandIndex={setLastCommandIndex}
+            clearHistory={clearHistory}
+            startupMode={true}
+            startupCommand={typedCommand}
+            showPulse={showPulse}
+            disableInput={true}
+          />
+        </div>
+      </>
+    );
+  }
+
+  // Show boot text with fast typing
+  if (startupStage === 4) {
+    return (
+      <>
+        <Head>
+          <title>{config.title}</title>
+        </Head>
+
+        <div className="p-2 sm:p-4 md:p-8 h-full border rounded-xl border-yellow relative flex flex-col">
+          <div className="relative flex-1 overflow-hidden">
+            <div
+              ref={containerRef}
+              className="overflow-y-auto h-full overflow-x-hidden pb-2"
+            >
+              <TypeWriter
+                text={startupText}
+                speed={0.1}
+                onComplete={() => setBootTextComplete(true)}
+                containerRef={containerRef}
+              />
+            </div>
+            <div className="absolute top-0 left-0 right-0 h-2 pointer-events-none bg-gradient-to-b from-background/60 via-background/30 to-transparent z-10" />
+            <div className="absolute bottom-0 left-0 right-0 h-4 pointer-events-none bg-gradient-to-t from-background via-background/60 to-transparent z-10" />
+          </div>
+
+          <div className="flex-shrink-0 relative z-20 mt-2">
+            <Input
+              inputRef={inputRef}
+              containerRef={containerRef}
+              command={command}
+              history={history}
+              lastCommandIndex={lastCommandIndex}
+              setCommand={setCommand}
+              setHistory={setHistory}
+              setLastCommandIndex={setLastCommandIndex}
+              clearHistory={clearHistory}
+              disableInput={true}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  // Normal view with banner
   return (
     <>
       <Head>

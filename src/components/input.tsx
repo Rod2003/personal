@@ -5,7 +5,23 @@ import { handleTabCompletion } from '../utils/tab-completion';
 import { Ps1 } from './Ps1';
 import { useMode } from '../contexts/mode-context';
 
-export const Input = ({
+interface InputProps {
+  inputRef: React.RefObject<HTMLInputElement>;
+  containerRef: React.RefObject<HTMLDivElement>;
+  command: string;
+  history: any[];
+  lastCommandIndex: number;
+  setCommand: (cmd: string) => void;
+  setHistory: (value: any) => void;
+  setLastCommandIndex: (index: number) => void;
+  clearHistory: () => void;
+  startupMode?: boolean;
+  startupCommand?: string;
+  showPulse?: boolean;
+  disableInput?: boolean;
+}
+
+export const Input: React.FC<InputProps> = ({
   inputRef,
   containerRef,
   command,
@@ -15,6 +31,10 @@ export const Input = ({
   setHistory,
   setLastCommandIndex,
   clearHistory,
+  startupMode = false,
+  startupCommand = '',
+  showPulse = false,
+  disableInput = false,
 }) => {
   const { mode, toggleMode } = useMode();
   
@@ -29,7 +49,13 @@ export const Input = ({
   const shell = createShell(mode, handleCommandClick, toggleMode);
 
   const onSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
-    const commands: [string] = history
+    // Disable input during startup animation
+    if (disableInput || startupMode) {
+      event.preventDefault();
+      return;
+    }
+
+    const commands: string[] = history
       .map(({ command }) => command)
       .filter((command: string) => command);
 
@@ -91,8 +117,12 @@ export const Input = ({
     setCommand(value);
   };
 
+  const displayCommand = startupMode && startupCommand ? startupCommand : command;
+
   return (
-    <div className="bg-background flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0 border-[1px] rounded-lg border-white p-2 mr-0 sm:mr-2 z-20">
+    <div className={`bg-background flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0 p-2 mr-0 sm:mr-2 z-20 ${
+      startupMode ? '' : 'border-[1px] rounded-lg border-white'
+    } ${showPulse ? 'pulse-once' : ''}`}>
       <div className="flex w-full justify-between items-center gap-2">
         <div className="flex flex-row space-x-1 sm:space-x-2 w-full min-w-0">
           <label htmlFor="prompt" className="flex-shrink-0 text-xs sm:text-base">
@@ -104,17 +134,18 @@ export const Input = ({
             id="prompt"
             type="text"
             className={`bg-background focus:outline-none flex-grow min-w-0 text-xs sm:text-base ${
-              commandExists(command, mode) || command === ''
+              commandExists(displayCommand, mode) || displayCommand === ''
                 ? 'text-green'
                 : 'text-red'
             }`}
-            value={command}
+            value={displayCommand}
             onChange={onChange}
             autoFocus
             onKeyDown={onSubmit}
             autoComplete="off"
             spellCheck="false"
-            placeholder={`type command here`}
+            placeholder={startupMode ? '' : 'type command here'}
+            readOnly={startupMode || disableInput}
           />
         </div>
       </div>

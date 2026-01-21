@@ -100,3 +100,13 @@ div#__next > div {
     font-size: 0.875rem;
   }
 }
+
+/* Startup animation */
+@keyframes pulse-once {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.98); }
+}
+
+.pulse-once {
+  animation: pulse-once 0.2s ease-in-out 1;
+}

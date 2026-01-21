@@ -1,35 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface TypeWriterProps {
   text: string;
   speed?: number;
   className?: string;
   onComplete?: () => void;
+  containerRef?: React.RefObject<HTMLDivElement>;
 }
 
 const TypeWriter: React.FC<TypeWriterProps> = ({ 
   text, 
   speed = 75, 
   className = '', 
-  onComplete 
+  onComplete,
+  containerRef 
 }) => {
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const textEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (currentIndex < text.length && !isPaused) {
+      // For ultra-fast speeds, batch multiple characters per update
+      const charsPerUpdate = speed < 1 ? Math.ceil(1 / speed) : 1;
+      const effectiveSpeed = speed < 1 ? 1 : speed;
+      
       const timeoutId = setTimeout(() => {
-        setDisplayedText(prev => prev + text[currentIndex]);
-        setCurrentIndex(prev => prev + 1);
+        const endIndex = Math.min(currentIndex + charsPerUpdate, text.length);
+        setDisplayedText(text.substring(0, endIndex));
+        setCurrentIndex(endIndex);
         
-        // Pause briefly at punctuation
-        if (['.', '!', '?', '\n'].includes(text[currentIndex])) {
+        // Pause briefly at punctuation only for slower speeds
+        if (speed > 10 && ['.', '!', '?', '\n'].includes(text[currentIndex])) {
           setIsPaused(true);
           setTimeout(() => setIsPaused(false), 50);
         }
-      }, speed);
+      }, effectiveSpeed);
 
       return () => clearTimeout(timeoutId);
     } else if (currentIndex >= text.length) {
@@ -37,6 +45,16 @@ const TypeWriter: React.FC<TypeWriterProps> = ({
         onComplete?.();
     }
   }, [currentIndex, text, speed, isPaused, onComplete]);
+
+  // Auto-scroll to bottom as text is typed
+  useEffect(() => {
+    if (containerRef?.current) {
+      containerRef.current.scrollTo({
+        top: containerRef.current.scrollHeight,
+        behavior: 'auto'
+      });
+    }
+  }, [displayedText, containerRef]);
 
   // Parse HTML links in text and convert to React elements
   const renderText = (text: string) => {
@@ -80,6 +98,7 @@ const TypeWriter: React.FC<TypeWriterProps> = ({
     <div className={`font-mono whitespace-pre-wrap ${className}`}>
       <p>{renderText(displayedText)}</p>
       {!isComplete && <span className="animate-pulse">▋</span>}
+      <div ref={textEndRef} />
     </div>
   );
 };
