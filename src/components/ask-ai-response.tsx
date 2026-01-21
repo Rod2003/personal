@@ -89,7 +89,12 @@ export const AskAIResponse: React.FC<AskAIResponseProps> = ({ query }) => {
           setIsLoading(false);
           setIsTyping(true);
         } else {
-          setError(data.error || 'Failed to get response');
+          // Handle rate limiting (429) and other errors
+          if (res.status === 429) {
+            setError(data.error || 'Rate limit exceeded. You can make 50 requests per hour. Please try again later.');
+          } else {
+            setError(data.error || 'Failed to get response');
+          }
           setIsLoading(false);
         }
       } catch (err: any) {

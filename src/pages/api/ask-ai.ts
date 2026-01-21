@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { supabaseAdmin } from '../../lib/supabase';
 import { openai, generateEmbedding } from '../../lib/openai';
+import { checkRateLimit, rateLimitResponse } from '../../lib/rate-limit';
 import config from '../../../config.json';
 
 interface Message {
@@ -199,6 +200,17 @@ export default async function handler(
 ) {
   if (req.method !== 'POST') {
     return res.status(405).json({ response: '', citations: [], error: 'Method not allowed' });
+  }
+
+  // Rate limiting: 50 requests per hour per IP
+  const isAllowed = checkRateLimit(req, res, {
+    maxRequests: 50,
+    windowMs: 60 * 60 * 1000, // 1 hour
+  });
+
+  if (!isAllowed) {
+    const resetTime = Date.now() + (60 * 60 * 1000);
+    return rateLimitResponse(res, resetTime);
   }
 
   try {

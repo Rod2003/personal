@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
+import { checkRateLimit, rateLimitResponse } from '../../lib/rate-limit';
 import config from '../../../config.json';
 
 interface GitHubRepo {
@@ -21,6 +22,17 @@ export default async function handler(
 ) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // Rate limiting: 100 requests per hour per IP (less expensive endpoint)
+  const isAllowed = checkRateLimit(req, res, {
+    maxRequests: 100,
+    windowMs: 60 * 60 * 1000, // 1 hour
+  });
+
+  if (!isAllowed) {
+    const resetTime = Date.now() + (60 * 60 * 1000);
+    return res.status(429).json({ error: `Rate limit exceeded. Please try again later.` });
   }
 
   try {
