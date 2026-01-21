@@ -14,7 +14,5 @@ export interface ProjectData {
   key: string;
   name: string;
   description: string;
-  stars?: number;
-  githubUrl?: string;
   sections: ProjectSection[];
 }

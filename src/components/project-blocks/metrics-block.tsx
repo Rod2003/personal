@@ -7,7 +7,7 @@ export const MetricsBlock: React.FC<{ block: MetricsBlockType }> = ({ block }) =
       {block.metrics.map((metric, idx) => (
         <div key={idx} className="text-foreground">
           <div className="text-green font-semibold">{metric.label}:</div>
-          <div>{metric.value}</div>
+          <div className="font-light">{metric.value}</div>
         </div>
       ))}
     </div>

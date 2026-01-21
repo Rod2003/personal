@@ -17,7 +17,7 @@ export const VideoBlock: React.FC<{ block: VideoBlockType }> = ({ block }) => {
         Your browser does not support the video tag.
       </video>
       {block.caption && (
-        <p className="text-foreground text-sm italic text-center">
+        <p className="text-foreground text-sm pt-2 italic text-center">
           {block.caption}
         </p>
       )}

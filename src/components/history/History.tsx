@@ -38,7 +38,13 @@ export const History: React.FC<{ history: Array<HistoryInterface> }> = ({
             <div className="flex-shrink">
               <Ps1 />
             </div>
-            <div className="flex-grow">{entry.command}</div>
+            <div className="flex-grow">
+              {index === 0 && !entry.command ? (
+                <span className="text-green">rodrodrod start</span>
+              ) : (
+                entry.command
+              )}
+            </div>
           </div>
           {renderOutput(entry.output)}
         </div>

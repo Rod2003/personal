@@ -1,25 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { commandExists } from '../utils/command-exists';
 import { createShell } from '../utils/shell';
-import { handleTabCompletion } from '../utils/tab-completion';
+import { handleTabCompletion, getAutocompleteSuggestion } from '../utils/tab-completion';
 import { Ps1 } from './Ps1';
-import { Info } from 'lucide-react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../components/tooltip';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '../components/dialog';
 import { useMode } from '../contexts/mode-context';
+import { Kbd } from './kbd';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 
-export const Input = ({
+interface InputProps {
+  inputRef: React.RefObject<HTMLInputElement>;
+  containerRef: React.RefObject<HTMLDivElement>;
+  command: string;
+  history: any[];
+  lastCommandIndex: number;
+  setCommand: (cmd: string) => void;
+  setHistory: (value: any) => void;
+  setLastCommandIndex: (index: number) => void;
+  clearHistory: () => void;
+  startupMode?: boolean;
+  startupCommand?: string;
+  showPulse?: boolean;
+  disableInput?: boolean;
+}
+
+export const Input: React.FC<InputProps> = ({
   inputRef,
   containerRef,
   command,
@@ -29,9 +33,13 @@ export const Input = ({
   setHistory,
   setLastCommandIndex,
   clearHistory,
+  startupMode = false,
+  startupCommand = '',
+  showPulse = false,
+  disableInput = false,
 }) => {
-  const [dialogOpen, setDialogOpen] = useState(false);
   const { mode, toggleMode } = useMode();
+  const [isFocused, setIsFocused] = React.useState(false);
   
   // Handler for when a command button is clicked in the help output
   const handleCommandClick = (cmd: string) => {
@@ -43,8 +51,33 @@ export const Input = ({
   
   const shell = createShell(mode, handleCommandClick, toggleMode);
 
+  // Global Tab key listener to focus input when not focused
+  useEffect(() => {
+    const handleGlobalTab = (event: KeyboardEvent) => {
+      // Only handle Tab key when input is not focused and not in startup/disabled mode
+      if (
+        event.key === 'Tab' &&
+        !startupMode &&
+        !disableInput &&
+        document.activeElement !== inputRef.current
+      ) {
+        event.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalTab);
+    return () => window.removeEventListener('keydown', handleGlobalTab);
+  }, [inputRef, startupMode, disableInput]);
+
   const onSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
-    const commands: [string] = history
+    // Disable input during startup animation
+    if (disableInput || startupMode) {
+      event.preventDefault();
+      return;
+    }
+
+    const commands: string[] = history
       .map(({ command }) => command)
       .filter((command: string) => command);
 
@@ -106,158 +139,110 @@ export const Input = ({
     setCommand(value);
   };
 
+  const displayCommand = startupMode && startupCommand ? startupCommand : command;
+
+  // Get autocomplete suggestion
+  const autocompleteSuggestion = useMemo(() => {
+    if (startupMode || disableInput || !isFocused || !command) {
+      return null;
+    }
+    return getAutocompleteSuggestion(command);
+  }, [command, startupMode, disableInput, isFocused]);
+
+  // Render keyboard shortcuts based on state
+  const renderShortcuts = () => {
+    // Don't show shortcuts on mobile devices
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    if (startupMode || disableInput || isMobile) return null;
+
+    if (!isFocused) {
+      return (
+        <div className="flex items-center justify-center gap-3 text-xs text-yellow/70 mt-2">
+          <div className="flex items-center gap-1">
+            <Kbd>tab</Kbd>
+            <span>focus</span>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex items-center justify-center gap-3 text-xs text-yellow/70 mt-2 flex-wrap">
+        {command.trim() !== '' && (
+          <>
+            <div className="flex items-center gap-1">
+              <Kbd>enter</Kbd>
+              <span>submit</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Kbd>tab</Kbd>
+              <span>complete</span>
+            </div>
+          </>
+        )}
+        <div className="flex items-center gap-1">
+          <Kbd>ctrl</Kbd>
+          <span>+</span>
+          <Kbd>l</Kbd>
+          <span>clear</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <Kbd><ArrowUp className="w-3 h-3" /></Kbd>
+          <span>/</span>
+          <Kbd><ArrowDown className="w-3 h-3" /></Kbd>
+          <span>history</span>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="sticky bottom-0 bg-background flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0 border-[1px] rounded border-white p-2 mr-0 sm:mr-2 z-20">
+    <>
+      <div className={`bg-background flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0 p-2 mr-0 sm:mr-2 z-20 transition-all duration-200 ${
+        startupMode ? '' : 'border-[1px] rounded-lg border-white focus-within:border-2 focus-within:border-yellow focus-within:bg-yellow/5'
+      } ${showPulse ? 'pulse-once' : ''}`}>
       <div className="flex w-full justify-between items-center gap-2">
         <div className="flex flex-row space-x-1 sm:space-x-2 w-full min-w-0">
           <label htmlFor="prompt" className="flex-shrink-0 text-xs sm:text-base">
             <Ps1 />
           </label>
 
-          <input
-            ref={inputRef}
-            id="prompt"
-            type="text"
-            className={`bg-background focus:outline-none flex-grow min-w-0 text-xs sm:text-base ${
-              commandExists(command, mode) || command === ''
-                ? 'text-green'
-                : 'text-red'
-            }`}
-            value={command}
-            onChange={onChange}
-            autoFocus
-            onKeyDown={onSubmit}
-            autoComplete="off"
-            spellCheck="false"
-            placeholder={`type command here`}
-          />
-        </div>
-        <div className="flex items-center flex-shrink-0">
-          <TooltipProvider>
-            <Tooltip key={1} delayDuration={100}>
-              <TooltipTrigger onClick={() => setDialogOpen(true)} className="p-1">
-                <Info className="w-4 h-4 sm:w-5 sm:h-5" />
-              </TooltipTrigger>
-              <TooltipContent
-                className="border-[1px] z-50 rounded-[4px] border-white bg-background text-xs"
-                sideOffset={10}
+          <div className="relative flex-grow min-w-0">
+            {autocompleteSuggestion && (
+              <div 
+                className="absolute inset-0 text-xs sm:text-base pointer-events-none select-none whitespace-nowrap overflow-hidden flex items-center"
+                aria-hidden="true"
               >
-                Click for more info
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+                <span className="invisible">{command}</span>
+                <span className="text-yellow">{autocompleteSuggestion.slice(command.length)}</span>
+              </div>
+            )}
+            <input
+              ref={inputRef}
+              id="prompt"
+              type="text"
+              className={`bg-transparent focus:outline-none w-full text-xs sm:text-base relative z-10 ${
+                commandExists(displayCommand, mode) || displayCommand === ''
+                  ? 'text-green'
+                  : 'text-red'
+              }`}
+              value={displayCommand}
+              onChange={onChange}
+              onKeyDown={onSubmit}
+              autoComplete="off"
+              spellCheck="false"
+              placeholder={startupMode ? '' : 'type command here'}
+              readOnly={startupMode || disableInput}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+            />
+          </div>
         </div>
+
       </div>
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="border-2 border-yellow z-50 rounded-[4px] text-white bg-background">
-          <DialogHeader>
-            <DialogTitle>
-              <div>Site Information</div>
-              <div className="text-xs pt-1 text-yellow tracking-wide">
-                Release 1.4
-              </div>
-            </DialogTitle>
-            <DialogDescription className="flex flex-col gap-1 max-h-[60vh] sm:max-h-[500px] overflow-y-auto">
-              <div className="pt-1 sm:pt-2"></div>
-              <div className="text-xs sm:text-sm text-green font-semibold">General</div>
-              <div className="text-xs sm:text-sm">
-                <p>
-                  <span className="glowing">rodrodrod.xyz</span>{' '}
-                  {`is a portfolio website made by me,`}{' '}
-                  <a
-                    className="underline"
-                    href="https://linkedin.com/in/rodrigo-delaguila"
-                  >
-                    Rodrigo Del Aguila
-                  </a>
-                  {`.`}
-                </p>
-              </div>
-              <div className="text-xs sm:text-sm pt-2">
-                It is designed as a shell interface, similar to bash - with a few common commands such as 'whoami', 'sudo', and 'ls'.
-              </div>
-              <div className="text-xs sm:text-sm pt-2">
-                There are also custom commands, some with API calls, such as 'projects' and 'weather'.
-              </div>
-              <div className="pt-1 sm:pt-2"></div>
-              <div className="text-xs sm:text-sm text-green font-semibold">Usage</div>
-              <div className="text-xs sm:text-sm">
-                <p>
-                  {`Keeping a simple user experience in mind, you can explore the site by simply typing a command and pressing enter.`}
-                </p>
-              </div>
-              <div className="text-xs sm:text-sm pt-2">
-                <p>
-                  {`As more updates are released, there will be more features that will be added. They will be recorded in the 'Releases' section and instructions will be added here.`}
-                </p>
-              </div>
-              <div className="pt-1 sm:pt-2"></div>
-              <div className="text-xs sm:text-sm text-green font-semibold">Tech stack</div>
-              <div className="text-xs sm:text-sm">
-                This website was built with:
-                <li className="pt-1 ml-4">
-                  Next.js - application and server-side rendering of components
-                </li>
-                <li className="pt-1 ml-4">
-                  React.js - state management and shell interface
-                </li>
-                <li className="pt-1 ml-4">
-                  TypeScript - main programming language used to build website
-                </li>
-                <li className="pt-1 ml-4">
-                  Tailwind CSS - all styling classes and UI enhancements
-                </li>
-                <li className="pt-1 ml-4">
-                  Axios - API requests and error handling
-                </li>
-              </div>
-              <div className="pt-1 sm:pt-2"></div>
-              <div className="text-xs sm:text-sm text-green font-semibold">Releases</div>
-              <div className="text-xs sm:text-sm">
-                <div className="text-xs pt-1 text-yellow tracking-wide font-semibold">
-                  Release 1.4
-                </div>
-                <li className="pt-1 ml-4">Added mode toggle for normal/advanced command sets</li>
-                <li className="pt-1 ml-4">Streamlined command interface for better user experience by removing unnecessary commands</li>
-                <li className="pt-1 ml-4">Added command filtering based on selected mode</li>
-                <div className="text-xs pt-1 text-yellow tracking-wide font-semibold">
-                  Release 1.3
-                </div>
-                <li className="pt-1 ml-4">Standardized to Mocha dark theme across all devices</li>
-                <li className="pt-1 ml-4">Optimized dialog and input components for mobile</li>
-                <li className="pt-1 ml-4">Removed header and status bar for cleaner interface</li>
-                <li className="pt-1 ml-4">Simplified dialog by removing interactive tooltips</li>
-                <li className="pt-1 ml-4">Added responsive ASCII banner (text on mobile, art on desktop)</li>
-                <div className="text-xs pt-1 text-yellow tracking-wide font-semibold">
-                  Release 1.2
-                </div>
-                <li className="pt-1 ml-4">Added typing animation</li>
-                <li className="pt-1 ml-4">Improved speed of commands with caching</li>
-                <li className="pt-1 ml-4">Stats bar for enhanced UI</li>
-                <li className="pt-1 ml-4">Added tic-tac-toe and number guesser games</li>
-                <div className="text-xs pt-1 text-yellow tracking-wide font-semibold">
-                  Release 1.1
-                </div>
-                <li className="pt-1 ml-4">Added real-time date</li>
-                <li className="pt-1 ml-4">
-                  {`Implemented info button which opens "Site Information" modal
-                  on click`}
-                </li>
-                <li className="pt-1 ml-4">Added tooltips for enhanced UI</li>
-                <li className="pt-1 ml-4">
-                  Included placeholder text for command input
-                </li>
-                <div className="text-xs pt-2 text-yellow tracking-wide font-semibold">
-                  Release 1.0
-                </div>
-                <li className="pt-1 ml-4">Created shell interface</li>
-                <li className="pt-1 ml-4">Added various custom commands</li>
-              </div>
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-    </div>
+      </div>
+      {renderShortcuts()}
+    </>
   );
 };
 

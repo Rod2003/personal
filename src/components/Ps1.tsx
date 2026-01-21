@@ -1,7 +1,11 @@
 import React from 'react';
 import config from '../../config.json';
 
-export const Ps1 = () => {
+interface Ps1Props {
+  route?: string;
+}
+
+export const Ps1: React.FC<Ps1Props> = ({ route }) => {
   return (
     <div className="whitespace-nowrap">
       <span className="text-yellow">
@@ -11,7 +15,14 @@ export const Ps1 = () => {
       <span className="text-green">
         {config.ps1_hostname}
       </span>
-      <span className="text-gray">:$ ~ </span>
+      {route ? (
+        <span className="text-blue">/{route}</span>
+      ): (
+        <>
+          <span className="text-gray">:</span>
+          <span className="text-gray">$ </span>
+        </>
+      )}
     </div>
   );
 };

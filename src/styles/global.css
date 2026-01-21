@@ -3,24 +3,24 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Hack';
-  src: url(/assets/fonts/Hack-NF.ttf);
+  font-family: 'VGA';
+  src: url(/assets/fonts/Px437_ACM_VGA_8x16.ttf);
   display: swap;
 }
 
 /* Mocha theme CSS variables */
 :root {
-  --mocha-background: #3B3228;
-  --mocha-foreground: #D0C8C6;
-  --mocha-yellow: #F4BC87;
-  --mocha-green: #BEB55B;
-  --mocha-gray: #A89BB9;
-  --mocha-blue: #8AB3B5;
-  --mocha-red: #CB6077;
+  --mocha-background: #2B2420;
+  --mocha-foreground: #C4BCB8;
+  --mocha-yellow: #9B7653;
+  --mocha-green: #A89E4D;
+  --mocha-gray: #7A6E5D;
+  --mocha-blue: #6B9799;
+  --mocha-red: #B34F63;
 }
 
 * {
-  font-family: 'Hack', monospace;
+  font-family: 'VGA', monospace;
 }
 
 html,
@@ -99,4 +99,14 @@ div#__next > div {
   .project-item {
     font-size: 0.875rem;
   }
+}
+
+/* Startup animation */
+@keyframes pulse-once {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.98); }
+}
+
+.pulse-once {
+  animation: pulse-once 0.2s ease-in-out 1;
 }

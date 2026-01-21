@@ -1,49 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ProjectAccordion } from './project-accordion';
-import { getProjects } from '../utils/api';
 import { projectsMetadata } from '../config/projects-config';
-import { GitHubRepo, ProjectData } from '../types/github';
+import { ProjectData } from '../types/github';
 
 export const ProjectsList: React.FC = () => {
-  const [githubRepos, setGithubRepos] = useState<GitHubRepo[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        // Fetch GitHub repos for projects that have repoName
-        const repos = await getProjects();
-        setGithubRepos(repos);
-        setLoading(false);
-      } catch (err) {
-        // If GitHub API fails, still show projects without GitHub data
-        console.error('Failed to fetch GitHub data:', err);
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
-  }, []);
-
-  if (loading) {
-    return <div className="text-foreground">Loading projects...</div>;
-  }
-
-  // Build project list from config, enriching with GitHub data where available
+  // Build project list from config
   const projectsList: ProjectData[] = Object.keys(projectsMetadata).map((key) => {
     const metadata = projectsMetadata[key];
-    
-    // Find matching GitHub repo if repoName is specified
-    const githubRepo = metadata.repoName 
-      ? githubRepos.find((repo) => repo.name === metadata.repoName)
-      : null;
 
     return {
       key,
       name: metadata.name,
       description: metadata.description,
-      stars: githubRepo?.stargazers_count,
-      githubUrl: githubRepo?.html_url,
       sections: metadata.sections,
     };
   });
@@ -63,8 +31,6 @@ export const ProjectsList: React.FC = () => {
           key={project.key}
           name={project.name}
           description={project.description}
-          stars={project.stars}
-          githubUrl={project.githubUrl}
           sections={project.sections}
         />
       ))}
