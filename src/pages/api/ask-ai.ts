@@ -229,13 +229,6 @@ export default async function handler(
     // Build context string
     const contextString = buildContextString(relevantChunks);
     
-    // Debug logging (remove in production)
-    console.log(`[ASK-AI] Query: "${query}"`);
-    console.log(`[ASK-AI] Retrieved ${relevantChunks.length} chunks`);
-    if (relevantChunks.length > 0) {
-      console.log('[ASK-AI] Top chunk:', relevantChunks[0].content.substring(0, 100) + '...');
-    }
-
     // Prepare messages
     const messages: Message[] = [
       {

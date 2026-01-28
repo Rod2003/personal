@@ -45,7 +45,6 @@ export const whoami = async (args: string[]): Promise<string> => {
 };
 
 export const ls = async (args: string[]): Promise<string> => {
-  console.log('here: ', args);
   if (args[0] === '-a') {
     return `a 
 bunch
