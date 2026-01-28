@@ -5,6 +5,7 @@ const parioWebProgram = '/assets/projects/pario-web-program.png';
 const parioWebCapacity = '/assets/projects/pario-web-capacity.png';
 const parioWebValence = '/assets/projects/pario-web-valence.png';
 const citeRiteDemo = '/assets/projects/cite-rite-demo.mp4';
+const lexAgentDemo = '/assets/projects/lex-agent-demo.mp4';
 
 export const projectsMetadata: Record<string, ProjectMetadata> = {
   'pario': {
@@ -589,6 +590,57 @@ const handleClickGo = async () => {
     setIsLoading(false);
   }
 };` },
+        ],
+      },
+    ],
+  },
+  'lex-agent': {
+    name: 'Lex',
+    description: 'A RAG agent that uses the San Francisco Legal Code as its knowledge base.',
+    links: {
+      website: 'https://sfc-agent.vercel.app',
+      github: 'https://github.com/Rod2003/lex-agent',
+    },
+    techStack: {
+      frontend: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind CSS 4', 'Radix UI', 'Motion'],
+      backend: ['Vercel AI SDK', 'OpenAI GPT-4o'],
+      database: ['PostgreSQL (Supabase)', 'pgvector', 'Prisma'],
+      infrastructure: ['Vercel'],
+      tools: ['OpenAI text-embedding-3-small', 'Playwright', 'BeautifulSoup', 'Zod'],
+    },
+    sections: [
+      {
+        title: 'Overview',
+        content: [
+          { type: 'video', video: lexAgentDemo, caption: 'Lex demo — RAG chat over San Francisco Legal Code' },
+          { type: 'text', content: 'Lex is a conversational RAG agent with the San Francisco Legal Code as its knowledge base. Users can ask about permits, zoning, business regulations, and more. Lex responds using semantic and keyword search over the actual municipal code, with streaming responses, tool invocation visibility, and source citations with links.' },
+          { type: 'text', content: 'The app is deployed at sfc-agent.vercel.app. It uses a Playwright-based scraper to ingest 14 code divisions (Planning, Business, Health, Building, etc.), a hierarchical schema (Division → Article → Section → Chunk) with pgvector and full-text search, and an agentic tool-use pattern so the model can search iteratively, look up citations, and chain tools for complex queries.' },
+        ],
+      },
+      {
+        title: 'Hybrid Search',
+        content: [
+          { type: 'text', content: 'Pure semantic search misses exact legal terminology; pure keyword search misses conceptual matches. The hybrid_search_code PostgreSQL function combines vector similarity (cosine distance via <=>) with ts_rank on tsvector columns, with configurable weighting (default 70% semantic, 30% keyword).' },
+          { type: 'text', content: 'Complex vector + full-text queries are implemented as SQL functions (match_code_chunks, hybrid_search_code) called via Prisma\'s $queryRaw, keeping retrieval logic in the database and avoiding ORM limitations with pgvector.' },
+        ],
+      },
+      {
+        title: 'Agentic Tool-Use',
+        content: [
+          { type: 'text', content: 'Rather than single-shot retrieval, the agent can search iteratively, look up specific citations when referenced, analyze regulations for specific business types, and chain multiple tools for complex queries. Tool schemas are Zod-validated and include hybridSearch, getCitation, analyzeBill, and proposeLegislation.' },
+          { type: 'text', content: 'Users see tool invocations as they happen, building trust and transparency. Partial results stream in while the agent continues reasoning.' },
+        ],
+      },
+      {
+        title: 'Data Pipeline & Schema',
+        content: [
+          { type: 'text', content: 'Process: (1) Playwright-based scraper navigates the SF legal code site, extracts content from 14 divisions, and handles anti-bot measures. (2) Sections are chunked with context headers preserved, then batch-embedded via OpenAI with progress tracking and cost estimation. (3) Hierarchical ingestion: Division → Article → Section → Chunk with pgvector embeddings and tsvector columns. (4) System prompt defines agent behavior; tools enable search, citation lookup, and regulatory analysis with proper citation formatting (e.g., "SF Planning Code § 202.1").' },
+          { type: 'list', style: 'bulleted', items: [
+            'Web scraper: Playwright, 14 code divisions, context-preserving chunking',
+            'Embeddings: OpenAI batch API, retry logic, cost estimation',
+            'Schema: Division → Article → Section → Chunk, pgvector + tsvector',
+            'Chat: Streaming responses, suggestion pills, tool display, source citations with links',
+          ]},
         ],
       },
     ],
