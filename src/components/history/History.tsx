@@ -3,6 +3,7 @@ import { History as HistoryInterface } from '../../types/terminal';
 import { Ps1 } from '../Ps1';
 import TypeWriter from '../type-writer';
 import { HelpCommand } from '../help-command';
+import { MusicPlayer } from '../music-player';
 
 export const History: React.FC<{ history: Array<HistoryInterface> }> = ({
   history,
@@ -23,6 +24,8 @@ export const History: React.FC<{ history: Array<HistoryInterface> }> = ({
           onCommandClick={output.onCommandClick}
         />
       );
+    } else if (output && typeof output === 'object' && '__type' in output && output.__type === 'MUSIC_COMPONENT') {
+      return <MusicPlayer />;
     } else if (React.isValidElement(output)) {
       // Handle React elements (e.g., from projects command)
       return <div className="mb-2">{output}</div>;

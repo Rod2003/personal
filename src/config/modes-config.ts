@@ -16,6 +16,7 @@ export const NORMAL_MODE_COMMANDS = [
   'projects',
   'weather',
   'games',
+  'music',
   'clear',
   'mode',
   'rodrodrod start', // Hidden restart command
