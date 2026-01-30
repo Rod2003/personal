@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import * as bin from './bin';
 import { CommandMode, isCommandAvailable } from '../config/modes-config';
 import { commandDescriptions } from '../config/command-descriptions';
-import { HelpCommandOutput } from '../types/terminal';
+import { HelpCommandOutput, MusicComponentOutput } from '../types/terminal';
 
 // Create a new function that uses the context
 export const createShell = (
@@ -12,7 +12,7 @@ export const createShell = (
 ) => {
   return async (
     command: string,
-    setHistory: (value: string | HelpCommandOutput | React.ReactElement) => void,
+    setHistory: (value: string | HelpCommandOutput | MusicComponentOutput | React.ReactElement) => void,
     clearHistory: () => void,
     setCommand: React.Dispatch<React.SetStateAction<string>>,
   ) => {
@@ -66,6 +66,11 @@ To toggle modes:
 
 Current mode commands: ${currentMode === 'normal' ? 'help, about, github, linkedin, projects, weather, games, clear, mode' : 'all commands including echo, whoami, ls, cd, date, vi, vim, nvim, emacs, sudo'}`;
         setHistory(modeInfo);
+      } else if (output === '__MUSIC_COMPONENT__') {
+        // Handle music command
+        setHistory({
+          __type: 'MUSIC_COMPONENT',
+        });
       } else if (output === '__RESTART__') {
         // Handle restart command - clear and show banner
         clearHistory();

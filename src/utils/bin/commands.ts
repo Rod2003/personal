@@ -108,3 +108,8 @@ export const rodrodrod = async (args: string[]): Promise<string> => {
   return `rodrodrod: unknown command '${args[0]}'`;
 };
 
+// Music player with audio visualizer
+export const music = async (args: string[]): Promise<string> => {
+  return '__MUSIC_COMPONENT__';
+};
+
