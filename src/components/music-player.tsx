@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { Play, Pause, SkipBack, SkipForward, Loader2 } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Loader2, Shuffle } from 'lucide-react';
 
 interface AudioTrack {
   id: string;
   name: string;
   artist?: string;
+  description?: string;
   file_path: string;
   url: string;
 }
@@ -15,79 +16,40 @@ interface AudioSource {
   url: string;
   name: string;
   artist?: string;
-  isBlob: boolean;
-  index?: number;
+  description?: string;
+  index: number;
 }
 
 interface AudioVisualizerProps {
-  audioElement: HTMLAudioElement;
+  analyser: AnalyserNode | null;
+  audioContext: AudioContext | null;
   isPlaying: boolean;
   barCount?: number;
-  fftSize?: number;
-  smoothingTimeConstant?: number;
 }
 
-// Custom Audio Visualizer Component
+// Custom Audio Visualizer Component - receives analyser from parent to persist across track changes
 const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
-  audioElement,
+  analyser,
+  audioContext,
   isPlaying,
   barCount = 48,
-  fftSize = 1024,
-  smoothingTimeConstant = 0.4,
 }) => {
   const [frequencyData, setFrequencyData] = useState<number[]>(new Array(barCount).fill(0));
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const animationRef = useRef<number | null>(null);
-  const isConnectedRef = useRef(false);
 
   // Gold color from mocha theme
   const BAR_COLOR = '#9B7653';
 
-  // Initialize Web Audio API
-  useEffect(() => {
-    if (!audioElement || isConnectedRef.current) return;
-
-    try {
-      // Create audio context
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-      audioContextRef.current = new AudioContextClass();
-
-      // Create analyser with lower smoothing for more reactive response
-      analyserRef.current = audioContextRef.current.createAnalyser();
-      analyserRef.current.fftSize = fftSize;
-      analyserRef.current.smoothingTimeConstant = smoothingTimeConstant;
-      analyserRef.current.minDecibels = -90;
-      analyserRef.current.maxDecibels = -10;
-
-      // Connect audio element to analyser
-      sourceRef.current = audioContextRef.current.createMediaElementSource(audioElement);
-      sourceRef.current.connect(analyserRef.current);
-      analyserRef.current.connect(audioContextRef.current.destination);
-
-      isConnectedRef.current = true;
-    } catch (err) {
-      console.error('Failed to initialize audio visualizer:', err);
-    }
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [audioElement, fftSize, smoothingTimeConstant]);
-
   // Animation loop
   useEffect(() => {
-    if (!analyserRef.current || !audioContextRef.current) return;
+    if (!analyser || !audioContext) return;
 
     const updateFrequencyData = () => {
-      if (!analyserRef.current) return;
+      if (!analyser) return;
 
-      const bufferLength = analyserRef.current.frequencyBinCount;
+      const bufferLength = analyser.frequencyBinCount;
       const dataArray = new Uint8Array(bufferLength);
-      analyserRef.current.getByteFrequencyData(dataArray);
+      analyser.getByteFrequencyData(dataArray);
 
       // Only use lower ~40% of frequency spectrum (cut off unused highs)
       const usableLength = Math.floor(bufferLength * 0.4);
@@ -121,8 +83,8 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
 
     if (isPlaying) {
       // Resume audio context if suspended
-      if (audioContextRef.current.state === 'suspended') {
-        audioContextRef.current.resume();
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
       }
       animationRef.current = requestAnimationFrame(updateFrequencyData);
     } else {
@@ -137,7 +99,7 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isPlaying, barCount]);
+  }, [isPlaying, barCount, analyser, audioContext]);
 
   return (
     <>
@@ -156,9 +118,33 @@ const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
   );
 };
 
+// Fisher-Yates shuffle algorithm
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
+// Format time in mm:ss
+const formatTime = (seconds: number): string => {
+  if (isNaN(seconds) || !isFinite(seconds)) return '0:00';
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+};
+
 export const MusicPlayer: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
+  
+  // Audio context refs - persist across track changes
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const isAudioConnectedRef = useRef(false);
   
   const [tracks, setTracks] = useState<AudioTrack[]>([]);
   const [loadingTracks, setLoadingTracks] = useState(true);
@@ -167,6 +153,45 @@ export const MusicPlayer: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isAudioReady, setIsAudioReady] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(-1);
+  
+  // Shuffle state - queue-based system
+  const [shuffleEnabled, setShuffleEnabled] = useState(false);
+  const [shuffleOrder, setShuffleOrder] = useState<number[]>([]); // Master shuffle order for the session
+  const [playQueue, setPlayQueue] = useState<number[]>([]); // Queue of track indices to play
+  const [playHistory, setPlayHistory] = useState<number[]>([]); // History for going back
+  
+  // Time tracking state
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  
+  // For re-rendering visualizer when audio is connected
+  const [audioConnected, setAudioConnected] = useState(false);
+
+  // Initialize audio context and connect to audio element
+  const initializeAudioContext = useCallback(() => {
+    if (!audioRef.current || isAudioConnectedRef.current) return;
+
+    try {
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      audioContextRef.current = new AudioContextClass();
+
+      analyserRef.current = audioContextRef.current.createAnalyser();
+      analyserRef.current.fftSize = 1024;
+      analyserRef.current.smoothingTimeConstant = 0.4;
+      analyserRef.current.minDecibels = -90;
+      analyserRef.current.maxDecibels = -10;
+
+      sourceRef.current = audioContextRef.current.createMediaElementSource(audioRef.current);
+      sourceRef.current.connect(analyserRef.current);
+      analyserRef.current.connect(audioContextRef.current.destination);
+
+      isAudioConnectedRef.current = true;
+      setAudioConnected(true);
+    } catch (err) {
+      console.error('Failed to initialize audio context:', err);
+    }
+  }, []);
 
   // Fetch tracks from Supabase on mount
   useEffect(() => {
@@ -188,26 +213,38 @@ export const MusicPlayer: React.FC = () => {
     fetchTracks();
   }, []);
 
-  // Cleanup blob URLs when source changes or component unmounts
-  const cleanupBlobUrl = useCallback((source: AudioSource | null) => {
-    if (source?.isBlob && source.url) {
-      URL.revokeObjectURL(source.url);
-    }
-  }, []);
+  // Generate the master shuffle order once per session (when tracks load or shuffle is enabled)
+  const generateShuffleOrder = useCallback((): number[] => {
+    const indices = tracks.map((_, i) => i);
+    return shuffleArray(indices);
+  }, [tracks]);
 
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      cleanupBlobUrl(audioSource);
-    };
+  // Get the queue from shuffle order, starting after the current track's position
+  const getQueueFromShuffleOrder = useCallback((currentIndex: number, order: number[]): number[] => {
+    if (order.length === 0) return [];
+    
+    // Find where current track is in the shuffle order
+    const positionInOrder = order.indexOf(currentIndex);
+    
+    if (positionInOrder === -1) {
+      // Current track not in order (shouldn't happen), return all except current
+      return order.filter(i => i !== currentIndex);
+    }
+    
+    // Return all tracks after current position in the shuffle order
+    // When we reach the end, we wrap around (excluding current track)
+    const afterCurrent = order.slice(positionInOrder + 1);
+    const beforeCurrent = order.slice(0, positionInOrder);
+    return [...afterCurrent, ...beforeCurrent];
   }, []);
 
   // Load track by index
   const loadTrack = useCallback((index: number) => {
     if (index < 0 || index >= tracks.length) return;
     
-    cleanupBlobUrl(audioSource);
     setIsAudioReady(false);
+    setCurrentTime(0);
+    setDuration(0);
     setCurrentTrackIndex(index);
     
     const track = tracks[index];
@@ -215,75 +252,33 @@ export const MusicPlayer: React.FC = () => {
       url: track.url,
       name: track.name,
       artist: track.artist,
-      isBlob: false,
+      description: track.description,
       index,
     });
-  }, [audioSource, cleanupBlobUrl, tracks]);
+  }, [tracks]);
 
-  // Handle preset file selection
-  const handlePresetSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  // Handle track selection from dropdown
+  const handleTrackSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = event.target.value;
     setError(null);
     setIsAudioReady(false);
     
     if (!selectedId) {
-      cleanupBlobUrl(audioSource);
       setAudioSource(null);
       setCurrentTrackIndex(-1);
+      setPlayQueue([]);
+      setPlayHistory([]);
       return;
     }
 
     const index = tracks.findIndex(t => t.id === selectedId);
     if (index !== -1) {
+      // Reset queue when manually selecting a track
+      if (shuffleEnabled && shuffleOrder.length > 0) {
+        setPlayQueue(getQueueFromShuffleOrder(index, shuffleOrder));
+      }
+      setPlayHistory([]);
       loadTrack(index);
-    }
-  };
-
-  // Handle file upload
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    setError(null);
-    setIsAudioReady(false);
-    
-    if (!file) {
-      return;
-    }
-
-    // Validate file type
-    const validTypes = ['audio/mpeg', 'audio/wav', 'audio/mp3', 'audio/wave', 'audio/x-wav'];
-    if (!validTypes.includes(file.type) && !file.name.match(/\.(mp3|wav)$/i)) {
-      setError('Please upload an MP3 or WAV file');
-      return;
-    }
-
-    // Cleanup previous blob URL if exists
-    cleanupBlobUrl(audioSource);
-
-    // Create blob URL
-    const blobUrl = URL.createObjectURL(file);
-    setAudioSource({
-      url: blobUrl,
-      name: file.name,
-      isBlob: true,
-    });
-    setCurrentTrackIndex(-1);
-
-    // Reset the file input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  // Clear current audio source
-  const handleClear = () => {
-    cleanupBlobUrl(audioSource);
-    setAudioSource(null);
-    setError(null);
-    setIsPlaying(false);
-    setIsAudioReady(false);
-    setCurrentTrackIndex(-1);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
     }
   };
 
@@ -298,44 +293,169 @@ export const MusicPlayer: React.FC = () => {
     }
   };
 
-  const playPrevious = () => {
-    if (audioSource?.isBlob || tracks.length === 0) return;
-    const newIndex = currentTrackIndex <= 0 ? tracks.length - 1 : currentTrackIndex - 1;
-    loadTrack(newIndex);
-  };
+  const playPrevious = useCallback(() => {
+    if (tracks.length === 0) return;
+    
+    // If we're more than 3 seconds into the song, restart it
+    if (audioRef.current && currentTime > 3) {
+      audioRef.current.currentTime = 0;
+      return;
+    }
+    
+    if (playHistory.length > 0) {
+      // Go back in history
+      const newHistory = [...playHistory];
+      const previousIndex = newHistory.pop()!;
+      setPlayHistory(newHistory);
+      // Add current track back to front of queue
+      setPlayQueue(prev => [currentTrackIndex, ...prev]);
+      loadTrack(previousIndex);
+    } else {
+      // No history - go to previous in order
+      const newIndex = currentTrackIndex <= 0 ? tracks.length - 1 : currentTrackIndex - 1;
+      loadTrack(newIndex);
+    }
+  }, [tracks.length, currentTime, playHistory, currentTrackIndex, loadTrack]);
 
-  const playNext = () => {
-    if (audioSource?.isBlob || tracks.length === 0) return;
-    const newIndex = currentTrackIndex >= tracks.length - 1 ? 0 : currentTrackIndex + 1;
-    loadTrack(newIndex);
-  };
+  const playNext = useCallback(() => {
+    if (tracks.length === 0) return;
+    
+    // Add current track to history
+    if (currentTrackIndex >= 0) {
+      setPlayHistory(prev => [...prev, currentTrackIndex]);
+    }
+    
+    if (shuffleEnabled) {
+      let queue = [...playQueue];
+      
+      // If queue is empty, restart from beginning of shuffle order
+      if (queue.length === 0 && shuffleOrder.length > 0) {
+        queue = getQueueFromShuffleOrder(currentTrackIndex, shuffleOrder);
+      }
+      
+      // Get next track from queue
+      const nextIndex = queue.shift()!;
+      setPlayQueue(queue);
+      loadTrack(nextIndex);
+    } else {
+      const newIndex = currentTrackIndex >= tracks.length - 1 ? 0 : currentTrackIndex + 1;
+      loadTrack(newIndex);
+    }
+  }, [shuffleEnabled, playQueue, shuffleOrder, getQueueFromShuffleOrder, loadTrack, currentTrackIndex, tracks.length]);
+
+  const toggleShuffle = useCallback(() => {
+    setShuffleEnabled(prev => {
+      const newShuffleEnabled = !prev;
+      if (newShuffleEnabled) {
+        // Turning on shuffle - use existing order or generate new one
+        let order = shuffleOrder;
+        if (order.length === 0 || order.length !== tracks.length) {
+          // Generate new shuffle order if none exists or tracks changed
+          order = generateShuffleOrder();
+          setShuffleOrder(order);
+        }
+        // Set queue to play from current track's position in the shuffle order
+        setPlayQueue(getQueueFromShuffleOrder(currentTrackIndex, order));
+      } else {
+        // Turning off shuffle - clear the queue (keep shuffle order for if re-enabled)
+        setPlayQueue([]);
+      }
+      // Clear history when toggling shuffle
+      setPlayHistory([]);
+      return newShuffleEnabled;
+    });
+  }, [generateShuffleOrder, getQueueFromShuffleOrder, currentTrackIndex, shuffleOrder, tracks.length]);
 
   // Handle audio events
-  const handlePlay = () => setIsPlaying(true);
+  const handlePlay = useCallback(() => {
+    // Initialize audio context on first play (requires user interaction)
+    initializeAudioContext();
+    setIsPlaying(true);
+  }, [initializeAudioContext]);
+  
   const handlePause = () => setIsPlaying(false);
-  const handleEnded = () => {
+  const handleEnded = useCallback(() => {
     setIsPlaying(false);
-    // Auto-play next track if not a blob
-    if (!audioSource?.isBlob && tracks.length > 1) {
+    // Auto-play next track
+    if (tracks.length > 0) {
       playNext();
     }
-  };
-  const handleCanPlay = () => {
+  }, [tracks.length, playNext]);
+  
+  const handleCanPlay = useCallback(() => {
     setIsAudioReady(true);
-    // Auto-play when track changes
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+    // Auto-play when track changes (after initial selection)
     if (audioRef.current && currentTrackIndex >= 0) {
       audioRef.current.play();
     }
+  }, [currentTrackIndex]);
+  
+  const handleTimeUpdate = () => {
+    if (audioRef.current && !isDragging) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
   };
   const handleError = () => {
-    setError('Failed to load audio file. Please try another file.');
+    setError('Failed to load audio file. Please try another track.');
     setIsAudioReady(false);
   };
 
-  // Trigger file input click
-  const triggerFileUpload = () => {
-    fileInputRef.current?.click();
+  // Seek functionality
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!progressRef.current || !audioRef.current || !duration) return;
+    
+    const rect = progressRef.current.getBoundingClientRect();
+    const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const newTime = percent * duration;
+    
+    audioRef.current.currentTime = newTime;
+    setCurrentTime(newTime);
   };
+
+  const handleSeekStart = (e: React.MouseEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    handleSeek(e);
+  };
+
+  const handleSeekMove = useCallback((e: MouseEvent) => {
+    if (!isDragging || !progressRef.current || !audioRef.current || !duration) return;
+    
+    const rect = progressRef.current.getBoundingClientRect();
+    const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const newTime = percent * duration;
+    
+    setCurrentTime(newTime);
+  }, [isDragging, duration]);
+
+  const handleSeekEnd = useCallback(() => {
+    if (isDragging && audioRef.current) {
+      audioRef.current.currentTime = currentTime;
+    }
+    setIsDragging(false);
+  }, [isDragging, currentTime]);
+
+  // Mouse event listeners for dragging
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleSeekMove);
+      window.addEventListener('mouseup', handleSeekEnd);
+      return () => {
+        window.removeEventListener('mousemove', handleSeekMove);
+        window.removeEventListener('mouseup', handleSeekEnd);
+      };
+    }
+  }, [isDragging, handleSeekMove, handleSeekEnd]);
+
+  // Progress percentage
+  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
     <div className="w-full max-w-3xl mx-auto p-4">
@@ -357,73 +477,31 @@ export const MusicPlayer: React.FC = () => {
             </div>
           )}
 
-          {/* Source Selection */}
-          <div className="space-y-3">
-            {/* Tracks Dropdown */}
-            <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-              <label className="text-gray text-xs sm:text-sm shrink-0">
-                track:
-              </label>
-              {loadingTracks ? (
-                <div className="flex-1 flex items-center gap-2 text-gray text-xs sm:text-sm">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  loading tracks...
-                </div>
-              ) : (
-                <select
-                  className="flex-1 bg-background border border-foreground/30 rounded px-3 py-2 text-foreground text-xs sm:text-sm focus:outline-none focus:border-yellow transition-colors cursor-pointer"
-                  onChange={handlePresetSelect}
-                  value={audioSource?.isBlob === false && currentTrackIndex >= 0 ? tracks[currentTrackIndex]?.id : ''}
-                  disabled={audioSource?.isBlob || tracks.length === 0}
-                >
-                  <option value="">{tracks.length === 0 ? '-- no tracks available --' : '-- select a track --'}</option>
-                  {tracks.map((track) => (
-                    <option key={track.id} value={track.id}>
-                      {track.name}{track.artist ? ` - ${track.artist}` : ''}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
-
-            {/* Divider */}
-            <div className="flex items-center gap-3">
-              <div className="flex-1 border-t border-foreground/10" />
-              <span className="text-gray text-xs">or</span>
-              <div className="flex-1 border-t border-foreground/10" />
-            </div>
-
-            {/* File Upload */}
-            <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-              <label className="text-gray text-xs sm:text-sm shrink-0">
-                upload:
-              </label>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".mp3,.wav,audio/mpeg,audio/wav"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-              <button
-                onClick={triggerFileUpload}
-                className="flex-1 bg-background border border-foreground/30 rounded px-3 py-2 text-foreground text-xs sm:text-sm text-left hover:border-yellow focus:outline-none focus:border-yellow transition-colors"
+          {/* Track Selection */}
+          <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+            <label className="text-gray text-xs sm:text-sm shrink-0">
+              track:
+            </label>
+            {loadingTracks ? (
+              <div className="flex-1 flex items-center gap-2 text-gray text-xs sm:text-sm">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                loading tracks...
+              </div>
+            ) : (
+              <select
+                className="flex-1 bg-background border border-foreground/30 rounded px-3 py-2 text-foreground text-xs sm:text-sm focus:outline-none focus:border-yellow transition-colors cursor-pointer"
+                onChange={handleTrackSelect}
+                value={currentTrackIndex >= 0 ? tracks[currentTrackIndex]?.id : ''}
+                disabled={tracks.length === 0}
               >
-                {audioSource?.isBlob ? (
-                  <span className="text-green">{audioSource.name}</span>
-                ) : (
-                  <span className="text-gray">click to upload .mp3 or .wav</span>
-                )}
-              </button>
-              {audioSource && (
-                <button
-                  onClick={handleClear}
-                  className="px-3 py-2 text-red text-xs sm:text-sm border border-red/30 rounded hover:bg-red/10 transition-colors"
-                >
-                  clear
-                </button>
-              )}
-            </div>
+                <option value="">{tracks.length === 0 ? '-- no tracks available --' : '-- select a track --'}</option>
+                {tracks.map((track) => (
+                  <option key={track.id} value={track.id}>
+                    {track.name}{track.artist ? ` - ${track.artist}` : ''}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
           {/* Audio Player */}
@@ -438,35 +516,74 @@ export const MusicPlayer: React.FC = () => {
                 onPause={handlePause}
                 onEnded={handleEnded}
                 onCanPlay={handleCanPlay}
+                onTimeUpdate={handleTimeUpdate}
+                onLoadedMetadata={handleLoadedMetadata}
                 onError={handleError}
                 className="hidden"
               />
 
               {/* Custom Frequency Visualizer */}
-              {isAudioReady && audioRef.current ? (
-                <div className="w-full h-[200px] flex items-end gap-[1px] rounded overflow-hidden border border-foreground/10">
+              <div className="w-full h-[200px] flex items-end gap-[1px] rounded overflow-hidden border border-foreground/10">
+                {isAudioReady && audioConnected ? (
                   <AudioVisualizer
-                    audioElement={audioRef.current}
+                    analyser={analyserRef.current}
+                    audioContext={audioContextRef.current}
                     isPlaying={isPlaying}
                     barCount={48}
-                    fftSize={1024}
-                    smoothingTimeConstant={0.4}
+                  />
+                ) : (
+                  <div className="flex-1 flex items-center justify-center">
+                    <span className="text-gray text-xs sm:text-sm animate-pulse">
+                      {isAudioReady ? 'press play to start visualizer' : 'loading audio...'}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Progress Bar / Seek Slider */}
+              <div className="space-y-1">
+                <div
+                  ref={progressRef}
+                  className="relative w-full h-1 bg-foreground/20 rounded-full cursor-pointer group"
+                  onMouseDown={handleSeekStart}
+                >
+                  {/* Progress fill */}
+                  <div
+                    className="absolute left-0 top-0 h-full bg-yellow rounded-full transition-all duration-75"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                  {/* Seek handle */}
+                  <div
+                    className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-yellow rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
+                    style={{ left: `calc(${progressPercent}% - 6px)` }}
                   />
                 </div>
-              ) : (
-                <div className="w-full h-[200px] rounded border border-foreground/10 flex items-center justify-center">
-                  <span className="text-gray text-xs sm:text-sm animate-pulse">
-                    loading audio...
-                  </span>
+                {/* Time display */}
+                <div className="flex justify-between text-[10px] sm:text-xs text-gray">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{formatTime(duration)}</span>
                 </div>
-              )}
+              </div>
 
               {/* Playback Controls */}
               <div className="flex items-center justify-center gap-4 pt-2">
+                {/* Shuffle */}
+                <button
+                  onClick={toggleShuffle}
+                  className={`p-2 transition-colors ${
+                    shuffleEnabled 
+                      ? 'text-yellow' 
+                      : 'text-foreground hover:text-yellow'
+                  }`}
+                  title={shuffleEnabled ? 'Shuffle on' : 'Shuffle off'}
+                >
+                  <Shuffle className="w-4 h-4" />
+                </button>
+
                 {/* Previous */}
                 <button
                   onClick={playPrevious}
-                  disabled={audioSource.isBlob || tracks.length <= 1}
+                  disabled={tracks.length <= 1}
                   className="p-2 text-foreground hover:text-yellow disabled:text-gray disabled:cursor-not-allowed transition-colors"
                   title="Previous track"
                 >
@@ -490,19 +607,29 @@ export const MusicPlayer: React.FC = () => {
                 {/* Next */}
                 <button
                   onClick={playNext}
-                  disabled={audioSource.isBlob || tracks.length <= 1}
+                  disabled={tracks.length <= 1}
                   className="p-2 text-foreground hover:text-yellow disabled:text-gray disabled:cursor-not-allowed transition-colors"
                   title="Next track"
                 >
                   <SkipForward className="w-5 h-5" />
                 </button>
+
+                {/* Spacer for symmetry */}
+                <div className="w-8" />
               </div>
 
-              {/* Track Name */}
-              <div className="text-center text-xs sm:text-sm">
-                <span className="text-green">{audioSource.name}</span>
-                {audioSource.artist && (
-                  <span className="text-gray"> - {audioSource.artist}</span>
+              {/* Track Info */}
+              <div className="text-center space-y-2">
+                <div className="text-xs sm:text-sm">
+                  <span className="text-green">{audioSource.name}</span>
+                  {audioSource.artist && (
+                    <span className="text-gray"> - {audioSource.artist}</span>
+                  )}
+                </div>
+                {audioSource.description && (
+                  <div className="text-gray/70 text-xs italic px-4">
+                    "{audioSource.description}"
+                  </div>
                 )}
               </div>
             </>
@@ -512,7 +639,7 @@ export const MusicPlayer: React.FC = () => {
           {!audioSource && (
             <div className="py-8 text-center">
               <div className="text-gray text-xs sm:text-sm">
-                select a preset or upload an audio file to visualize
+                select a track to start listening
               </div>
             </div>
           )}

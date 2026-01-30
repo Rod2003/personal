@@ -14,6 +14,7 @@ export default function MusicAdmin() {
   // Form state
   const [name, setName] = useState('');
   const [artist, setArtist] = useState('');
+  const [description, setDescription] = useState('');
   const [file, setFile] = useState<File | null>(null);
 
   // Fetch existing tracks
@@ -87,6 +88,7 @@ export default function MusicAdmin() {
         body: JSON.stringify({
           name,
           artist: artist || null,
+          description: description || null,
           file_path: fileName,
         }),
       });
@@ -100,6 +102,7 @@ export default function MusicAdmin() {
       setSuccess(`Track "${name}" uploaded successfully!`);
       setName('');
       setArtist('');
+      setDescription('');
       setFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -197,6 +200,20 @@ export default function MusicAdmin() {
               />
             </div>
 
+            {/* Description */}
+            <div>
+              <label className="block text-gray text-xs sm:text-sm mb-1">
+                Description (optional)
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                className="w-full bg-background border border-foreground/30 rounded px-3 py-2 text-foreground text-sm focus:outline-none focus:border-yellow resize-none"
+                placeholder="Your thoughts on this song..."
+              />
+            </div>
+
             {/* File */}
             <div>
               <label className="block text-gray text-xs sm:text-sm mb-1">
@@ -276,6 +293,11 @@ export default function MusicAdmin() {
                       {track.artist && (
                         <div className="text-gray text-xs truncate">
                           {track.artist}
+                        </div>
+                      )}
+                      {track.description && (
+                        <div className="text-gray/70 text-xs mt-1 line-clamp-2">
+                          {track.description}
                         </div>
                       )}
                     </div>

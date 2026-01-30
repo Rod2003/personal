@@ -29,7 +29,7 @@ export default async function handler(
 
   if (req.method === 'POST') {
     // Create new audio track record
-    const { name, artist, file_path } = req.body;
+    const { name, artist, description, file_path } = req.body;
 
     if (!name || !file_path) {
       return res.status(400).json({ error: 'Name and file_path are required' });
@@ -37,7 +37,7 @@ export default async function handler(
 
     const { data, error } = await supabase
       .from('audio_tracks')
-      .insert([{ name, artist, file_path }])
+      .insert([{ name, artist, description, file_path }])
       .select()
       .single();
 
