@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Play, Pause, SkipBack, SkipForward, Loader2, Shuffle } from 'lucide-react';
+import { TrackSelect } from './dropdown';
 
 interface AudioTrack {
   id: string;
@@ -258,8 +259,7 @@ export const MusicPlayer: React.FC = () => {
   }, [tracks]);
 
   // Handle track selection from dropdown
-  const handleTrackSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedId = event.target.value;
+  const handleTrackSelect = useCallback((selectedId: string) => {
     setError(null);
     setIsAudioReady(false);
     
@@ -280,7 +280,7 @@ export const MusicPlayer: React.FC = () => {
       setPlayHistory([]);
       loadTrack(index);
     }
-  };
+  }, [tracks, shuffleEnabled, shuffleOrder, getQueueFromShuffleOrder, loadTrack]);
 
   // Playback controls
   const togglePlayPause = () => {
@@ -488,19 +488,12 @@ export const MusicPlayer: React.FC = () => {
                 loading tracks...
               </div>
             ) : (
-              <select
-                className="flex-1 bg-background border border-foreground/30 rounded px-3 py-2 text-foreground text-xs sm:text-sm focus:outline-none focus:border-yellow transition-colors cursor-pointer"
-                onChange={handleTrackSelect}
+              <TrackSelect
+                tracks={tracks}
                 value={currentTrackIndex >= 0 ? tracks[currentTrackIndex]?.id : ''}
+                onChange={handleTrackSelect}
                 disabled={tracks.length === 0}
-              >
-                <option value="">{tracks.length === 0 ? '-- no tracks available --' : '-- select a track --'}</option>
-                {tracks.map((track) => (
-                  <option key={track.id} value={track.id}>
-                    {track.name}{track.artist ? ` - ${track.artist}` : ''}
-                  </option>
-                ))}
-              </select>
+              />
             )}
           </div>
 

@@ -27,6 +27,9 @@ module.exports = {
         "2xl": "1400px",
       },
     },*/
+    fontFamily: {
+      vga: ["'VGA'", 'monospace'],
+    },
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
