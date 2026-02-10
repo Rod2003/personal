@@ -54,19 +54,19 @@ export const createShell = (
           onCommandClick,
         });
       } else if (output === '__MODE_INFO__') {
-        // Handle mode command
+        // Handle mode command - toggle mode and show info
+        if (toggleMode) {
+          toggleMode();
+        }
         const currentMode = mode || 'normal';
-        const modeInfo = `Current mode: ${currentMode}
+        const newMode = currentMode === 'normal' ? 'advanced' : 'normal';
+        const modeInfo = `Mode toggled to: ${newMode}
         
 Available modes:
   - normal: Essential site commands only
   - advanced: All commands including bash CLI commands
 
-To toggle modes:
-  - Click the terminal icon in the top right corner
-  - Or use the keyboard shortcut (if available)
-
-Current mode commands: ${currentMode === 'normal' ? 'help, about, github, linkedin, projects, weather, games, clear, mode' : 'all commands including echo, whoami, ls, cd, date, vi, vim, nvim, emacs, sudo'}`;
+Current mode commands: ${newMode === 'normal' ? 'help, about, grep, github, linkedin, projects, weather, games, music, clear, mode' : 'all commands including echo, whoami, ls, cd, date, vi, vim, nvim, emacs, sudo'}`;
         setHistory(modeInfo);
       } else if (output === '__MUSIC_COMPONENT__') {
         // Handle music command - remove any existing music components first
