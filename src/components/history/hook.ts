@@ -23,5 +23,6 @@ export const useHistory = (defaultValue: Array<History>) => {
     setCommand,
     setLastCommandIndex,
     clearHistory: () => setHistory([]),
+    setHistoryState: setHistory,
   };
 };

@@ -65,6 +65,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
     setHistory,
     clearHistory,
     setLastCommandIndex,
+    setHistoryState,
   } = useHistory([]);
 
   // Startup animation state
@@ -312,6 +313,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
             setHistory={setHistory}
             setLastCommandIndex={setLastCommandIndex}
             clearHistory={clearHistory}
+            setHistoryState={setHistoryState}
           />
         </div>
       </div>

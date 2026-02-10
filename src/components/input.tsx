@@ -17,6 +17,7 @@ interface InputProps {
   setHistory: (value: any) => void;
   setLastCommandIndex: (index: number) => void;
   clearHistory: () => void;
+  setHistoryState?: (history: any[]) => void;
   startupMode?: boolean;
   startupCommand?: string;
   showPulse?: boolean;
@@ -33,6 +34,7 @@ export const Input: React.FC<InputProps> = ({
   setHistory,
   setLastCommandIndex,
   clearHistory,
+  setHistoryState,
   startupMode = false,
   startupCommand = '',
   showPulse = false,
@@ -101,7 +103,7 @@ export const Input: React.FC<InputProps> = ({
     if (event.key === 'Enter' || event.code === '13') {
       event.preventDefault();
       setLastCommandIndex(0);
-      await shell(command, setHistory, clearHistory, setCommand);
+      await shell(command, setHistory, clearHistory, setCommand, history, setHistoryState);
       containerRef.current.scrollTo(0, containerRef.current.scrollHeight);
     }
 

@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import * as bin from './bin';
 import { CommandMode, isCommandAvailable } from '../config/modes-config';
 import { commandDescriptions } from '../config/command-descriptions';
-import { HelpCommandOutput, MusicComponentOutput } from '../types/terminal';
+import { HelpCommandOutput, MusicComponentOutput, History } from '../types/terminal';
 
 // Create a new function that uses the context
 export const createShell = (
@@ -15,6 +15,8 @@ export const createShell = (
     setHistory: (value: string | HelpCommandOutput | MusicComponentOutput | React.ReactElement) => void,
     clearHistory: () => void,
     setCommand: React.Dispatch<React.SetStateAction<string>>,
+    currentHistory?: History[],
+    setHistoryState?: (history: History[]) => void,
   ) => {
     const args = command.split(' ');
     args[0] = args[0].toLowerCase();
@@ -67,10 +69,37 @@ To toggle modes:
 Current mode commands: ${currentMode === 'normal' ? 'help, about, github, linkedin, projects, weather, games, clear, mode' : 'all commands including echo, whoami, ls, cd, date, vi, vim, nvim, emacs, sudo'}`;
         setHistory(modeInfo);
       } else if (output === '__MUSIC_COMPONENT__') {
-        // Handle music command
-        setHistory({
-          __type: 'MUSIC_COMPONENT',
-        });
+        // Handle music command - remove any existing music components first
+        if (currentHistory && setHistoryState) {
+          const filteredHistory = currentHistory
+            .filter(
+              (entry) => !(entry.output && typeof entry.output === 'object' && '__type' in entry.output && entry.output.__type === 'MUSIC_COMPONENT')
+            )
+            .map((entry, index) => ({
+              ...entry,
+              id: index,
+            }));
+          
+          // Add the new music component to the filtered history
+          const newHistory = [
+            ...filteredHistory,
+            {
+              id: filteredHistory.length,
+              date: new Date(),
+              command,
+              output: {
+                __type: 'MUSIC_COMPONENT',
+              } as MusicComponentOutput,
+            },
+          ];
+          
+          setHistoryState(newHistory);
+        } else {
+          // Fallback if setHistoryState is not available
+          setHistory({
+            __type: 'MUSIC_COMPONENT',
+          });
+        }
       } else if (output === '__RESTART__') {
         // Handle restart command - clear and show banner
         clearHistory();
