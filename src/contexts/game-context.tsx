@@ -1,12 +1,11 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useMemo } from 'react';
 import { TicTacToeState, NumberGameState, GameContextType } from '../types/game';
 
-// Helper function to check for winner
 const checkWinner = (board: string[]): string | null => {
   const winPatterns = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-    [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-    [0, 4, 8], [2, 4, 6] // diagonals
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6],
   ];
 
   for (const pattern of winPatterns) {
@@ -20,7 +19,6 @@ const checkWinner = (board: string[]): string | null => {
   return null;
 };
 
-// Helper function to format the board
 const formatBoard = (board: string[]): string => {
   let display = '\n';
   for (let i = 0; i < 9; i += 3) {
@@ -129,18 +127,21 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCurrentGame(null);
   };
 
+  const contextValue = useMemo(
+    () => ({
+      currentGame,
+      ticTacToe,
+      numberGame,
+      updateTicTacToe,
+      updateNumberGame,
+      startGame,
+      exitGame,
+    }),
+    [currentGame, ticTacToe, numberGame],
+  );
+
   return (
-    <GameContext.Provider
-      value={{
-        currentGame,
-        ticTacToe,
-        numberGame,
-        updateTicTacToe,
-        updateNumberGame,
-        startGame,
-        exitGame,
-      }}
-    >
+    <GameContext.Provider value={contextValue}>
       {children}
     </GameContext.Provider>
   );
