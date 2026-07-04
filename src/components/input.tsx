@@ -1,23 +1,27 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
+import { useGlobalTabFocus } from '../hooks/use-global-tab-focus';
 import { commandExists } from '../utils/command-exists';
-import { createShell } from '../utils/shell';
 import { handleTabCompletion, getAutocompleteSuggestion } from '../utils/tab-completion';
-import { Ps1 } from './Ps1';
-import { useMode } from '../contexts/mode-context';
+import { Ps1 } from './ps1';
 import { Kbd } from './kbd';
 import { ArrowUp, ArrowDown } from 'lucide-react';
+import { runCommand, RunDeps } from '../commands/runner';
+import { History } from '../types/terminal';
+import { HistoryOutput } from '../commands/schemas';
+import { HistoryOutputKind } from '../commands/types';
 
 interface InputProps {
   inputRef: React.RefObject<HTMLInputElement>;
   containerRef: React.RefObject<HTMLDivElement>;
   command: string;
-  history: any[];
+  history: History[];
   lastCommandIndex: number;
   setCommand: (cmd: string) => void;
-  setHistory: (value: any) => void;
+  appendHistory: (command: string, output: HistoryOutput) => void;
   setLastCommandIndex: (index: number) => void;
   clearHistory: () => void;
-  setHistoryState?: (history: any[]) => void;
+  setHistoryState?: (history: History[]) => void;
+  onCommandClick?: (command: string) => void;
   startupMode?: boolean;
   startupCommand?: string;
   showPulse?: boolean;
@@ -31,62 +35,53 @@ export const Input: React.FC<InputProps> = ({
   history,
   lastCommandIndex,
   setCommand,
-  setHistory,
+  appendHistory,
   setLastCommandIndex,
   clearHistory,
   setHistoryState,
+  onCommandClick,
   startupMode = false,
   startupCommand = '',
   showPulse = false,
   disableInput = false,
 }) => {
-  const { mode, toggleMode } = useMode();
   const [isFocused, setIsFocused] = React.useState(false);
-  
-  // Handler for when a command button is clicked in the help output
-  const handleCommandClick = (cmd: string) => {
-    setCommand(cmd);
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
-  
-  const shell = createShell(mode, handleCommandClick, toggleMode);
 
-  // Global Tab key listener to focus input when not focused
-  useEffect(() => {
-    const handleGlobalTab = (event: KeyboardEvent) => {
-      // Only handle Tab key when input is not focused and not in startup/disabled mode
-      if (
-        event.key === 'Tab' &&
-        !startupMode &&
-        !disableInput &&
-        document.activeElement !== inputRef.current
-      ) {
-        event.preventDefault();
-        inputRef.current?.focus();
-      }
-    };
+  const runDeps: RunDeps = useMemo(
+    () => ({
+      onCommandClick,
+      appendHistory,
+      clearHistory,
+      setHistoryState,
+      currentHistory: history,
+      setCommand,
+    }),
+    [
+      onCommandClick,
+      appendHistory,
+      clearHistory,
+      setHistoryState,
+      history,
+      setCommand,
+    ],
+  );
 
-    window.addEventListener('keydown', handleGlobalTab);
-    return () => window.removeEventListener('keydown', handleGlobalTab);
-  }, [inputRef, startupMode, disableInput]);
+  useGlobalTabFocus(inputRef, startupMode || disableInput);
 
   const onSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
-    // Disable input during startup animation
     if (disableInput || startupMode) {
       event.preventDefault();
       return;
     }
 
     const commands: string[] = history
-      .map(({ command }) => command)
-      .filter((command: string) => command);
+      .map(({ command: cmd }) => cmd)
+      .filter((cmd): cmd is string => Boolean(cmd));
 
     if (event.key === 'c' && event.ctrlKey) {
       event.preventDefault();
       setCommand('');
-      setHistory('');
+      appendHistory('', { kind: HistoryOutputKind.Text, text: '' });
       setLastCommandIndex(0);
     }
 
@@ -103,8 +98,8 @@ export const Input: React.FC<InputProps> = ({
     if (event.key === 'Enter' || event.code === '13') {
       event.preventDefault();
       setLastCommandIndex(0);
-      await shell(command, setHistory, clearHistory, setCommand, history, setHistoryState);
-      containerRef.current.scrollTo(0, containerRef.current.scrollHeight);
+      await runCommand(command, runDeps);
+      containerRef.current?.scrollTo(0, containerRef.current.scrollHeight);
     }
 
     if (event.key === 'ArrowUp') {
@@ -143,7 +138,6 @@ export const Input: React.FC<InputProps> = ({
 
   const displayCommand = startupMode && startupCommand ? startupCommand : command;
 
-  // Get autocomplete suggestion
   const autocompleteSuggestion = useMemo(() => {
     if (startupMode || disableInput || !isFocused || !command) {
       return null;
@@ -151,9 +145,7 @@ export const Input: React.FC<InputProps> = ({
     return getAutocompleteSuggestion(command);
   }, [command, startupMode, disableInput, isFocused]);
 
-  // Render keyboard shortcuts based on state
   const renderShortcuts = () => {
-    // Don't show shortcuts on mobile devices
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
     if (startupMode || disableInput || isMobile) return null;
 
@@ -224,7 +216,7 @@ export const Input: React.FC<InputProps> = ({
               id="prompt"
               type="text"
               className={`bg-transparent focus:outline-none w-full text-xs sm:text-base relative z-10 ${
-                commandExists(displayCommand, mode) || displayCommand === ''
+                commandExists(displayCommand) || displayCommand === ''
                   ? 'text-green'
                   : 'text-red'
               }`}

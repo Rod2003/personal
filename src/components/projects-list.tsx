@@ -4,7 +4,6 @@ import { projectsMetadata } from '../config/projects-config';
 import { ProjectData } from '../types/github';
 
 export const ProjectsList: React.FC = () => {
-  // Build project list from config
   const projectsList: ProjectData[] = Object.keys(projectsMetadata).map((key) => {
     const metadata = projectsMetadata[key];
 
