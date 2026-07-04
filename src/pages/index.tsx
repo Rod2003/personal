@@ -4,7 +4,6 @@ import config from '../../config.json';
 import { Input } from '../components/input';
 import { useHistory } from '../hooks/use-history';
 import { History } from '../components/history';
-import { GameProvider } from '../contexts/game-context';
 import TypeWriter from '../components/type-writer';
 import { startupText } from '../utils/startup-text-loader';
 import { runCommand, RunDeps } from '../commands/runner';
@@ -206,11 +205,7 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
 };
 
 const IndexPage: React.FC<IndexPageProps> = ({ inputRef }) => {
-  return (
-    <GameProvider>
-      <IndexPageContent inputRef={inputRef} />
-    </GameProvider>
-  );
+  return <IndexPageContent inputRef={inputRef} />;
 };
 
 export default IndexPage;
