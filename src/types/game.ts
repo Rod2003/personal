@@ -1,18 +1,17 @@
-// Game-related types
-export interface TicTacToeState {
+export type TicTacToeState = {
   board: string[];
   currentPlayer: 'X' | 'O';
   gameOver: boolean;
   winner: string | null;
-}
+};
 
-export interface NumberGameState {
+export type NumberGameState = {
   targetNumber: number;
   triesLeft: number;
   gameOver: boolean;
-}
+};
 
-export interface GameContextType {
+export type GameContextType = {
   currentGame: string | null;
   ticTacToe: TicTacToeState;
   numberGame: NumberGameState;
@@ -20,4 +19,4 @@ export interface GameContextType {
   updateNumberGame: (guess: number) => string;
   startGame: (game: string) => void;
   exitGame: () => void;
-}
+};

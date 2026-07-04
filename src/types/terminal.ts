@@ -1,24 +1,13 @@
-import React from 'react';
+import type { HistoryOutput } from '../commands/schemas';
 
-// Terminal/Shell related types
-export interface HelpCommandOutput {
-  __type: 'HELP_COMPONENT';
-  commands: Array<{ name: string; description: string }>;
-  onCommandClick?: (command: string) => void;
-}
-
-export interface MusicComponentOutput {
-  __type: 'MUSIC_COMPONENT';
-}
-
-export interface History {
+export type History = {
   id: number;
   date: Date;
   command: string;
-  output: string | HelpCommandOutput | MusicComponentOutput | React.ReactElement;
-}
+  output: HistoryOutput;
+};
 
-export interface CommandDescription {
+export type CommandDescription = {
   name: string;
   description: string;
-}
+};
