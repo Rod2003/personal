@@ -1,17 +1,15 @@
-// Audio track types for Supabase integration
-
-export interface AudioTrack {
+export type AudioTrack = {
   id: string;
   name: string;
   artist?: string;
   description?: string;
   file_path: string;
   created_at: string;
-}
+};
 
-export interface AudioTrackInsert {
+export type AudioTrackInsert = {
   name: string;
   artist?: string;
   description?: string;
   file_path: string;
-}
+};

@@ -1,56 +1,55 @@
 import { StaticImageData } from 'next/image';
 
-// Content Block Types
-export interface ImageBlock {
+export type ImageBlock = {
   type: 'image';
   image: StaticImageData | string;
   caption?: string;
-}
+};
 
-export interface HeadingBlock {
+export type HeadingBlock = {
   type: 'heading';
   level: 1 | 2 | 3;
   text: string;
-}
+};
 
-export interface TextBlock {
+export type TextBlock = {
   type: 'text';
   content: string;
-}
+};
 
-export interface ListBlock {
+export type ListBlock = {
   type: 'list';
   style: 'bulleted' | 'numbered';
   items: string[];
-}
+};
 
-export interface CodeBlock {
+export type CodeBlock = {
   type: 'code';
   language: string;
   code: string;
-}
+};
 
-export interface LinkBlock {
+export type LinkBlock = {
   type: 'link';
   url: string;
   text: string;
   external?: boolean;
-}
+};
 
-export interface DividerBlock {
+export type DividerBlock = {
   type: 'divider';
-}
+};
 
-export interface MetricsBlock {
+export type MetricsBlock = {
   type: 'metrics';
   metrics: Array<{ label: string; value: string }>;
-}
+};
 
-export interface VideoBlock {
+export type VideoBlock = {
   type: 'video';
-  video: string; // path to video file
+  video: string;
   caption?: string;
-}
+};
 
 export type ContentBlock =
   | ImageBlock
@@ -63,12 +62,12 @@ export type ContentBlock =
   | MetricsBlock
   | VideoBlock;
 
-export interface ProjectSection {
+export type ProjectSection = {
   title?: string;
   content: ContentBlock[];
-}
+};
 
-export interface ProjectMetadata {
+export type ProjectMetadata = {
   repoName?: string;
   name: string;
   description: string;
@@ -105,4 +104,4 @@ export interface ProjectMetadata {
     caption?: string;
   };
   achievements?: string[];
-}
+};

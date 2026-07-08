@@ -14,7 +14,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from './tooltip';
-import { Ps1 } from './Ps1';
+import { Ps1 } from './ps1';
 
 interface ProjectProps {
   name: string;
@@ -66,7 +66,7 @@ export const ProjectAccordion: React.FC<ProjectProps> = ({
               <Tooltip disableHoverableContent>
                 <TooltipTrigger asChild>
                   <DialogClose asChild>
-                    <button className="rounded-full bg-background/80 backdrop-blur-sm p-1.5 opacity-70 transition-all duration-200 hover:opacity-100 hover:bg-yellow/10 focus:outline-none border border-gray">
+                    <button type="button" className="rounded-full bg-background/80 backdrop-blur-sm p-1.5 opacity-70 transition-all duration-200 hover:opacity-100 hover:bg-yellow/10 focus:outline-none border border-gray">
                       <ArrowLeft className="h-3 w-3 text-foreground" />
                       <span className="sr-only">Go back</span>
                     </button>

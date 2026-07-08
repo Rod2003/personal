@@ -82,7 +82,6 @@ const DropdownMenuSeparator = React.forwardRef<
 ));
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 
-// Custom Select-like dropdown component
 interface TrackSelectProps {
   tracks: Array<{
     id: string;
