@@ -1,5 +1,5 @@
 import React from 'react';
-import { banner } from './definitions/_shared';
+import { banner } from './definitions/banner';
 import { getCommand, getHelpCommands } from './registry';
 import {
   CommandOutputKind,

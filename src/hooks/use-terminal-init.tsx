@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 import React from 'react';
-import { banner } from '../commands/definitions/_shared';
+import { banner } from '../commands/definitions/banner';
 import { HistoryOutputKind } from '../commands/types';
 import { HistoryOutput } from '../commands/schemas';
 import { History } from '../types/terminal';
