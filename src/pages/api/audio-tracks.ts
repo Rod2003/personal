@@ -1,11 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { supabase } from "../../helpers/supabase";
+import { getSupabase } from "../../helpers/supabase";
 import { AudioTrack } from "../../types/audio";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const supabase = getSupabase();
+
   if (req.method === "GET") {
     const { data, error } = await supabase
       .from("audio_tracks")

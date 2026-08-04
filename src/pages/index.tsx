@@ -1,6 +1,10 @@
 import Head from 'next/head';
-import React, { useRef, useCallback, useMemo } from 'react';
-import config from '../../config.json';
+import React, {
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react';
+import config from '../config/site.json';
 import { Input } from '../components/input';
 import { useHistory } from '../hooks/use-history';
 import { History } from '../components/history';
@@ -11,6 +15,9 @@ import { getCommand } from '../commands/registry';
 import { CardBehavior, CommandDefinition } from '../commands/types';
 import { useStartupAnimation } from '../hooks/use-startup-animation';
 import { useTerminalInit } from '../hooks/use-terminal-init';
+import { ClassicPortfolio } from '../components/classic-portfolio';
+import { ViewToggle } from '../components/view-toggle';
+import { useViewMode } from '../hooks/use-view-mode';
 
 interface IndexPageProps {
   inputRef: React.MutableRefObject<HTMLInputElement>;
@@ -205,7 +212,26 @@ const IndexPageContent: React.FC<IndexPageProps> = ({ inputRef }) => {
 };
 
 const IndexPage: React.FC<IndexPageProps> = ({ inputRef }) => {
-  return <IndexPageContent inputRef={inputRef} />;
+  const { mode, setViewMode } = useViewMode();
+
+  if (!mode) return <div className="h-full bg-background" />;
+
+  if (mode === 'classic') {
+    return <ClassicPortfolio mode={mode} onModeChange={setViewMode} />;
+  }
+
+  return (
+    <div className="terminal-view dark relative h-full">
+      <div className="terminal-view-toggle">
+        <ViewToggle
+          mode={mode}
+          onChange={setViewMode}
+          tone="terminal"
+        />
+      </div>
+      <IndexPageContent inputRef={inputRef} />
+    </div>
+  );
 };
 
 export default IndexPage;

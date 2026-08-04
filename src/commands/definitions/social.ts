@@ -1,4 +1,4 @@
-import config from '../../../config.json';
+import config from '../../config/site.json';
 import { Command, CommandDefinition, CommandOutputKind } from '../types';
 
 export const github: CommandDefinition = {
