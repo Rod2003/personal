@@ -10,7 +10,40 @@ export const personalLifeline = defineLifeline({
   milestones: {
     2003: {
       id: 'born',
-      events: ['Born in Lima, Peru.', 'Moved to Canada.'],
+      events: ['Born in Lima, Peru.'],
+    },
+    2008: {
+      id: 'moved-to-canada',
+      events: ['Moved to Canada.'],
+    },
+    2017: {
+      id: 'started-high-school',
+      events: ['Started high school.'],
+    },
+    2019: {
+      id: 'started-music',
+      events: [
+        'Started producing music.',
+        'Started my first business reselling high-demand shoes and clothing.',
+      ],
+    },
+    2021: {
+      id: 'graduated-high-school',
+      events: [
+        'Graduated high school.',
+        [
+          {
+            type: 'text',
+            value: 'Started university studying Computer Engineering at ',
+          },
+          {
+            type: 'link',
+            value: 'Queen\'s',
+            href: 'https://smithengineering.queensu.ca/',
+          },
+          { type: 'text', value: '.' },
+        ],
+      ],
     },
     2023: {
       id: 'pario',
@@ -39,8 +72,8 @@ export const personalLifeline = defineLifeline({
         { id: 'citerite', name: 'CiteRite' },
       ],
       events: [
+        'Graduated university.',
         'Rebuilt Pario as a B2B workflow platform and wrapped the chapter in May.',
-        'Built CiteRite to review claims and citations in AI-generated text.',
       ],
       photos: [
         {

@@ -1,9 +1,11 @@
 import Head from 'next/head';
+import { Terminal } from 'lucide-react';
 import React from 'react';
 import config from '../config/site.json';
 import { personalLifeline } from '../config/lifeline';
 import { ViewMode } from '../utils/view-mode';
 import { Lifeline } from './lifeline';
+import { registerCompanyIcons } from './lifeline/company-icon';
 import {
   LifelineFooter,
   LifelineNav,
@@ -19,6 +21,19 @@ interface ClassicPortfolioProps {
 
 const navLink =
   'text-sm text-zinc-500 transition-colors duration-300 hover:text-black dark:hover:text-white';
+
+const ParioLogo: React.FC<{ className?: string }> = ({ className }) => (
+  // eslint-disable-next-line @next/next/no-img-element
+  <img
+    src="/assets/logos/pario-icon.png"
+    alt=""
+    className={`${className ?? ''} object-contain`}
+  />
+);
+
+registerCompanyIcons({
+  pario: { icon: ParioLogo, sizeClassName: 'h-5 w-5' },
+});
 
 export const ClassicPortfolio: React.FC<ClassicPortfolioProps> = ({
   onModeChange,
@@ -80,7 +95,17 @@ export const ClassicPortfolio: React.FC<ClassicPortfolioProps> = ({
       </LifelineStage>
 
       <LifelineFooter>
-        <ThemeSwitcher />
+        <div className="flex w-full items-center justify-between">
+          <ThemeSwitcher />
+          <button
+            type="button"
+            onClick={() => onModeChange('terminal')}
+            aria-label="Switch to terminal view"
+            className={navLink}
+          >
+            <Terminal className="h-4 w-4" strokeWidth={1.75} />
+          </button>
+        </div>
       </LifelineFooter>
     </LifelineShell>
   </>
