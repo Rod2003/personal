@@ -146,6 +146,18 @@ export const personalLifeline = defineLifeline({
             value: ', the largest undergraduate AI conference in Canada.',
           },
         ],
+        [
+          {
+            type: 'text',
+            value: 'Started writing and published my first technical article, ',
+          },
+          {
+            type: 'link',
+            value: 'The Power of Prediction: Exploring the Role of AI in Decision Making',
+            href: 'https://medium.com/qmind-ai/the-power-of-prediction-exploring-the-role-of-ai-in-decision-making-f7d3905d312f',
+          },
+          { type: 'text', value: '.' },
+        ],
       ],
     },
     2024: {
