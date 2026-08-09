@@ -82,7 +82,6 @@ export const personalLifeline = defineLifeline({
       companies: [{ id: 'queens-university', name: "Queen's University" }],
       events: [
         'Graduated high school.',
-        'Closed reselling business, profitable.',
         [
           {
             type: 'text',
@@ -101,6 +100,7 @@ export const personalLifeline = defineLifeline({
       id: 'cibc',
       companies: [{ id: 'cibc', name: 'CIBC' }],
       events: [
+        'Closed reselling business, profitable.',
         [
           { type: 'text', value: 'Worked as a data engineer at ' },
           { type: 'link', value: 'CIBC', href: 'https://www.cibc.com/' },
