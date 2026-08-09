@@ -224,6 +224,11 @@ export const personalLifeline = defineLifeline({
             alt: 'Circleback homepage',
           },
         },
+        [
+          { type: 'text', value: 'Built ' },
+          { type: 'link', value: 'Shelf', href: 'https://github.com/Rod2003/shelf' },
+          { type: 'text', value: ', a macOS native productivity tool.' },
+        ],
       ],
     },
   },
