@@ -204,8 +204,8 @@ export const personalLifeline = defineLifeline({
           { type: 'text', value: '.' },
         ],
         'Graduated university.',
-        'Finished my first triathlon.',
         'Moved to Vancouver.',
+        'Finished my first triathlon.',
       ],
     },
     2026: {
