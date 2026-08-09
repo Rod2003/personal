@@ -147,13 +147,10 @@ export const personalLifeline = defineLifeline({
           },
         ],
         [
-          {
-            type: 'text',
-            value: 'Started writing and published my first technical article, ',
-          },
+          { type: 'text', value: 'Started writing and publishing ' },
           {
             type: 'link',
-            value: 'The Power of Prediction: Exploring the Role of AI in Decision Making',
+            value: 'technical articles',
             href: 'https://medium.com/qmind-ai/the-power-of-prediction-exploring-the-role-of-ai-in-decision-making-f7d3905d312f',
           },
           { type: 'text', value: '.' },
