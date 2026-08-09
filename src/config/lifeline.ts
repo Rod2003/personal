@@ -190,13 +190,10 @@ export const personalLifeline = defineLifeline({
     2025: {
       id: 'builder',
       companies: [
-        { id: 'pario', name: 'Pario' },
-        { id: 'grid-insights', name: 'Grid Insights' },
         { id: 'ripplex-fellowship', name: 'RippleX Fellowship' },
-        { id: 'qmind', name: 'QMIND' },
+        { id: 'grid-insights', name: 'Grid Insights' },
       ],
       events: [
-        'Graduated university.',
         [
           { type: 'text', value: 'Fellow at ' },
           {
@@ -206,6 +203,7 @@ export const personalLifeline = defineLifeline({
           },
           { type: 'text', value: '.' },
         ],
+        'Graduated university.',
         'Finished my first triathlon.',
         'Moved to Vancouver.',
       ],
