@@ -227,7 +227,7 @@ export const personalLifeline = defineLifeline({
         [
           { type: 'text', value: 'Built ' },
           { type: 'link', value: 'Shelf', href: 'https://github.com/Rod2003/shelf' },
-          { type: 'text', value: ', a macOS native productivity tool.' },
+          { type: 'text', value: ', an open-source macOS native productivity tool.' },
         ],
       ],
     },
