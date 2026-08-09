@@ -138,6 +138,14 @@ export const personalLifeline = defineLifeline({
             alt: 'Pario homepage',
           },
         },
+        [
+          { type: 'text', value: 'Helped organize ' },
+          { type: 'link', value: 'CUCAI', href: 'https://cucai.ca/' },
+          {
+            type: 'text',
+            value: ', the largest undergraduate AI conference in Canada.',
+          },
+        ],
       ],
     },
     2024: {
@@ -164,6 +172,7 @@ export const personalLifeline = defineLifeline({
           },
           { type: 'text', value: ' as a founding software engineer.' },
         ],
+        'Rebuilt Pario as a B2B workflow platform and wrapped the chapter in May.',
       ],
     },
     2025: {
@@ -185,24 +194,29 @@ export const personalLifeline = defineLifeline({
           },
           { type: 'text', value: '.' },
         ],
-        'Rebuilt Pario as a B2B workflow platform and wrapped the chapter in May.',
         'Finished my first triathlon.',
-        'Moved to Vancouver, Canada.',
+        'Moved to Vancouver.',
       ],
     },
     2026: {
       id: 'now',
       companies: [{ id: 'circleback', name: 'Circleback' }],
       events: [
-        [
-          { type: 'text', value: 'Moved to San Francisco, working on ' },
-          {
-            type: 'link',
-            value: 'Circleback',
-            href: 'https://circleback.ai/',
+        {
+          text: [
+            { type: 'text', value: 'Moved to San Francisco, working on ' },
+            {
+              type: 'link',
+              value: 'Circleback',
+              href: 'https://circleback.ai/',
+            },
+            { type: 'text', value: '.' },
+          ],
+          image: {
+            src: '/assets/projects/circleback-homepage.png',
+            alt: 'Circleback homepage',
           },
-          { type: 'text', value: '.' },
-        ],
+        },
       ],
     },
   },
