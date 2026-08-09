@@ -175,7 +175,7 @@ export const personalLifeline = defineLifeline({
           { type: 'link', value: 'QMIND', href: 'https://qmind.ca/' },
           { type: 'text', value: '.' },
         ],
-        'Rebuilt Pario as a B2B workflow platform and wrapped the chapter in May.',
+        'Rebuilt Pario as a B2B workflow platform.',
         [
           { type: 'text', value: 'Joined ' },
           {
