@@ -195,7 +195,7 @@ export const personalLifeline = defineLifeline({
       ],
       events: [
         [
-          { type: 'text', value: 'Fellow at ' },
+          { type: 'text', value: 'Became a fellow at ' },
           {
             type: 'link',
             value: 'RippleX Fellowship',
