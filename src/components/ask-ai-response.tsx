@@ -1,41 +1,6 @@
 import React from 'react';
 import { useAskAi } from '../hooks/use-ask-ai';
-
-function parseMarkdownLinks(text: string): React.ReactNode {
-  const parts: React.ReactNode[] = [];
-  let lastIndex = 0;
-
-  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-  let match: RegExpExecArray | null;
-
-  while ((match = linkRegex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push(text.substring(lastIndex, match.index));
-    }
-
-    const linkText = match[1];
-    const url = match[2];
-    parts.push(
-      <a
-        key={match.index}
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-yellow underline hover:text-green transition-colors"
-      >
-        {linkText}
-      </a>,
-    );
-
-    lastIndex = match.index + match[0].length;
-  }
-
-  if (lastIndex < text.length) {
-    parts.push(text.substring(lastIndex));
-  }
-
-  return parts.length > 0 ? <>{parts}</> : text;
-}
+import { parseMarkdownLinks } from '../utils/render-links';
 
 interface AskAIResponseProps {
   query: string;

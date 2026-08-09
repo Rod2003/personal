@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
 import { checkRateLimit, rateLimitResponse } from "../../helpers/rate-limit";
-import config from "../../../config.json";
+import config from "../../config/site.json";
 
 interface GitHubRepo {
   stargazers_count: number;
@@ -37,9 +36,11 @@ export default async function handler(
   }
 
   try {
-    const { data: repos } = await axios.get<GitHubRepo[]>(
+    const response = await fetch(
       `https://api.github.com/users/${config.social.github}/repos?per_page=100&sort=stars`
     );
+    if (!response.ok) throw new Error(`GitHub returned ${response.status}`);
+    const repos = (await response.json()) as GitHubRepo[];
 
     const totalStars = repos.reduce(
       (sum, repo) => sum + repo.stargazers_count,

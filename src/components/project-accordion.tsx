@@ -106,4 +106,3 @@ export const ProjectAccordion: React.FC<ProjectProps> = ({
     </Dialog>
   );
 };
-

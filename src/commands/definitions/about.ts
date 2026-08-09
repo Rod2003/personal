@@ -1,4 +1,4 @@
-import config from '../../../config.json';
+import config from '../../config/site.json';
 import {
   CardBehavior,
   Command,

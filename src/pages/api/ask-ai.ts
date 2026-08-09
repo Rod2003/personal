@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { supabaseAdmin } from "../../helpers/supabase";
+import { getSupabaseAdmin } from "../../helpers/supabase";
 import { openai, generateEmbedding } from "../../helpers/openai";
 import { checkRateLimit, rateLimitResponse } from "../../helpers/rate-limit";
-import config from "../../../config.json";
+import config from "../../config/site.json";
 
 interface Message {
   role: "user" | "assistant" | "system";
@@ -147,7 +147,7 @@ async function retrieveContext(
   matchCount: number = 5
 ): Promise<{ content: string; metadata: any }[]> {
   try {
-    const { data, error } = await supabaseAdmin.rpc("match_portfolio_vectors", {
+    const { data, error } = await getSupabaseAdmin().rpc("match_portfolio_vectors", {
       query_embedding: queryEmbedding,
       match_count: matchCount,
       similarity_threshold: 0.5,
@@ -171,7 +171,7 @@ async function retrieveProjectContext(
   try {
     const results = await Promise.all(
       projectNames.map(async (projectName) => {
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await getSupabaseAdmin()
           .from("portfolio_vectors")
           .select("content, metadata")
           .eq("metadata->>project", projectName)

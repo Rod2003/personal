@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { supabase } from "../../helpers/supabase";
+import { getSupabase } from "../../helpers/supabase";
 import { AudioTrack } from "../../types/audio";
 import { Upload, Trash2, Music, Loader2 } from "lucide-react";
 export default function MusicAdmin() {
@@ -61,7 +61,7 @@ export default function MusicAdmin() {
         /[^a-zA-Z0-9]/g,
         "_"
       )}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage
+      const { error: uploadError } = await getSupabase().storage
         .from("audio")
         .upload(fileName, file);
       if (uploadError) {

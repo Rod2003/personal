@@ -37,5 +37,5 @@ yarn-error.log*
 # temp
 example-project.md
 
-# scripts
-scripts/
+# local HTTPS certificate
+/.cert/
