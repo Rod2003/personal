@@ -56,7 +56,6 @@ export const personalLifeline = defineLifeline({
       events: [
         'Started producing music.',
         'Started my first business reselling high-demand shoes and clothing.',
-        'Learned C# programming to use sneaker bots.',
       ],
     },
     2020: {
@@ -75,6 +74,7 @@ export const personalLifeline = defineLifeline({
           },
           { type: 'text', value: '.' },
         ],
+        'Learned C# programming to use sneaker bots.',
       ],
     },
     2021: {
