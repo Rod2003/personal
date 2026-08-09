@@ -207,7 +207,10 @@ export const personalLifeline = defineLifeline({
     },
     2026: {
       id: 'now',
-      companies: [{ id: 'circleback', name: 'Circleback' }],
+      companies: [
+        { id: 'circleback', name: 'Circleback' },
+        { id: 'shelf', name: 'Shelf' },
+      ],
       events: [
         {
           text: [
