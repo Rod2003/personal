@@ -2,26 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'VGA';
-  src: url(/assets/fonts/Px437_ACM_VGA_8x16.ttf);
-  display: swap;
-}
-
-:root {
-  --mocha-background: #2b2420;
-  --mocha-foreground: #c4bcb8;
-  --mocha-yellow: #9b7653;
-  --mocha-green: #a89e4d;
-  --mocha-gray: #7a6e5d;
-  --mocha-blue: #6b9799;
-  --mocha-red: #b34f63;
-}
-
-* {
-  font-family: 'VGA', monospace;
-}
-
 html,
 body,
 body > div:first-child,
@@ -36,110 +16,6 @@ div#__next > div {
   body {
     overflow-x: hidden;
   }
-}
-
-.glowing {
-  text-shadow: 0 0 5px var(--mocha-gray);
-}
-
-.terminal-view ::-webkit-scrollbar {
-  width: 5px;
-  height: 10px;
-}
-
-.terminal-view ::-webkit-scrollbar-track {
-  border-radius: 5px;
-  background: var(--mocha-background);
-}
-
-.terminal-view ::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background: var(--mocha-foreground);
-}
-
-.terminal-view ::-webkit-scrollbar-thumb:hover {
-  background: var(--mocha-yellow);
-}
-
-.project-accordion {
-  transition: all 0.2s ease;
-}
-
-.project-accordion summary {
-  outline: none;
-  cursor: pointer;
-}
-
-.project-accordion summary::-webkit-details-marker {
-  display: none;
-}
-
-.project-accordion[open] summary .arrow {
-  transform: rotate(90deg);
-}
-
-.project-accordion summary:hover {
-  opacity: 0.8;
-}
-
-@media (max-width: 768px) {
-  .project-accordion,
-  .project-item {
-    font-size: 0.875rem;
-  }
-
-  .project-accordion summary {
-    padding: 0.25rem 0;
-  }
-}
-
-@keyframes pulse-once {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(0.98);
-  }
-}
-
-.pulse-once {
-  animation: pulse-once 0.2s ease-in-out 1;
-}
-
-.view-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  padding: 2px;
-  border: 1px solid rgb(155 118 83 / 0.55);
-  border-radius: 999px;
-  color: var(--mocha-foreground);
-  background: rgb(43 36 32 / 0.9);
-}
-
-.view-toggle-option {
-  padding: 5px 9px;
-  border-radius: 999px;
-  font-size: 11px;
-  line-height: 1;
-  transition:
-    color 150ms ease,
-    background-color 150ms ease;
-}
-
-.view-toggle .is-active {
-  color: var(--mocha-background);
-  background: var(--mocha-yellow);
-}
-
-.terminal-view-toggle {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 40;
 }
 
 /* Lifeline registry styles */

@@ -10,6 +10,7 @@ import {
   type CSSProperties,
 } from "react"
 import { Film, Image as ImageIcon } from "lucide-react"
+import { filterMap } from "@/helpers"
 import { cn } from "@/lib/utils"
 import { CompanyIcon, getCompanyIcon } from "./company-icon"
 import {
@@ -246,20 +247,19 @@ const LifelineVerticalEntry = forwardRef<
 
               {marker.companies && marker.companies.length > 0 && (
                 <div className="mb-2 flex items-center justify-start gap-1.5">
-                  {marker.companies
-                    .map((company) => ({
-                      company,
-                      entry: getCompanyIcon(company.id),
-                    }))
-                    .filter(({ entry }) => entry)
-                    .map(({ company, entry }) => (
+                  {filterMap(marker.companies, (company) => {
+                    const entry = getCompanyIcon(company.id)
+                    if (!entry) return null
+
+                    return (
                       <CompanyIcon
                         key={company.id}
-                        entry={entry!}
+                        entry={entry}
                         label={company.name}
                         className="opacity-70"
                       />
-                    ))}
+                    )
+                  })}
                 </div>
               )}
 
@@ -448,7 +448,7 @@ export function LifelineVertical({
           Age
         </p>
         <div aria-hidden="true" />
-        <p className="text-[11px] font-medium uppercase leading-5 tracking-[0.08em] text-zinc-500 transition-colors duration-300 dark:text-zinc-600">
+        <p className="text-[11px] font-medium uppercase leading-4 tracking-[0.08em] text-zinc-500 transition-colors duration-300 dark:text-zinc-600">
           Years
         </p>
       </div>

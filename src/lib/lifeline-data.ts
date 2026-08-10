@@ -1,5 +1,4 @@
 import type {
-  LifelineEvent,
   LifelineLegendItem,
   LifelineMarker,
 } from "@/components/lifeline/types"
@@ -36,33 +35,6 @@ interface DefineLifelineInput {
   description: string
   legend?: LifelineLegendItem[]
   milestones: LifelineMilestones
-}
-
-/**
- * Translated event texts keyed by year, aligned by index with the
- * source milestone's events. Only the text is swapped — images,
- * effects, mentors, and structure stay single-sourced.
- */
-export type LifelineTextOverrides = Record<number, string[]>
-
-export function localizeLifelineMarkers(
-  markers: LifelineMarker[],
-  texts: LifelineTextOverrides,
-): LifelineMarker[] {
-  return markers.map((marker) => {
-    const translated = texts[marker.year]
-    if (!translated) return marker
-
-    const events: LifelineEvent[] = marker.events.map((event, index) => {
-      const text = translated[index]
-      if (text === undefined) return event
-      if (typeof event === "string") return text
-      if (Array.isArray(event)) return event
-      return { ...event, text }
-    })
-
-    return { ...marker, events }
-  })
 }
 
 export function defineLifeline(input: DefineLifelineInput): LifelineRecord {

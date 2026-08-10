@@ -18,10 +18,6 @@ module.exports = {
   theme: {
     extend: {
       colors: mochaColors,
-      fontFamily: {
-        vga: ["'VGA'", 'monospace'],
-      },
     },
   },
-  plugins: [require('tailwindcss-animate')],
 };

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import config from '../config/site.json';
+import config from '../config/lifeline';
 
-const navLink =
+const navLinkClassName =
   'text-sm text-zinc-500 transition-colors duration-300 hover:text-black dark:hover:text-white';
 
 export const SiteNavLinks: FC = () => (
@@ -12,7 +12,7 @@ export const SiteNavLinks: FC = () => (
         href={item.href}
         target={item.external ? '_blank' : undefined}
         rel={item.external ? 'noopener noreferrer' : undefined}
-        className={`${navLink} ${item.className ?? ''}`}
+        className={navLinkClassName}
       >
         {item.label}
       </a>

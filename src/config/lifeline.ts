@@ -1,6 +1,28 @@
 import { defineLifeline } from '../lib/lifeline-data';
 
-export const personalLifeline = defineLifeline({
+const social = {
+  github: 'Rod2003',
+  linkedin: 'rodrigo-delaguila',
+};
+
+const navItems = [
+  {
+    label: 'GitHub',
+    href: `https://github.com/${social.github}`,
+    external: true,
+  },
+  {
+    label: 'LinkedIn',
+    href: `https://www.linkedin.com/in/${social.linkedin}`,
+    external: true,
+  },
+  {
+    label: 'Writing',
+    href: '/writing',
+  },
+];
+
+const lifeline = defineLifeline({
   slug: 'rodrigo-del-aguila',
   name: 'Rodrigo Del Aguila',
   birthYear: 2003,
@@ -243,3 +265,11 @@ export const personalLifeline = defineLifeline({
     },
   },
 });
+
+const config = {
+  ...lifeline,
+  social,
+  navItems,
+};
+
+export default config;

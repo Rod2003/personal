@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
-import config from '../config/site.json';
-import { personalLifeline } from '../config/lifeline';
+import config from '../config/lifeline';
 import { Lifeline } from './lifeline';
 import { registerCompanyIcons } from './lifeline/company-icon';
 import {
@@ -68,7 +67,7 @@ export const ClassicPortfolio: React.FC = () => (
   <>
     <Head>
       <title>{config.name} — Lifeline</title>
-      <meta name="description" content={personalLifeline.description} />
+      <meta name="description" content={config.description} />
     </Head>
 
     <LifelineShell className="lifeline-shell fixed inset-0 z-[45]">
@@ -87,9 +86,9 @@ export const ClassicPortfolio: React.FC = () => (
 
       <LifelineStage>
         <Lifeline
-          markers={personalLifeline.markers}
-          birthYear={personalLifeline.birthYear}
-          title={personalLifeline.name}
+          markers={config.markers}
+          birthYear={config.birthYear}
+          title={config.name}
           className="h-full"
         />
       </LifelineStage>
