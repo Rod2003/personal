@@ -19,8 +19,6 @@ const registry: Record<string, CompanyIconEntry> = {}
  *     acme: { icon: AcmeIcon, sizeClassName: "h-4 w-4" },
  *   })
  *
- * Unregistered ids fall back to the name's initial in a small ring,
- * so a timeline reads cleanly before you've drawn a single logo.
  */
 export function registerCompanyIcons(
   entries: Record<string, CompanyIconEntry>,
@@ -28,44 +26,31 @@ export function registerCompanyIcons(
   Object.assign(registry, entries)
 }
 
+export function getCompanyIcon(id: CompanyIconId) {
+  return registry[id]
+}
+
 export function CompanyIcon({
-  id,
+  entry,
   label,
   className,
 }: {
-  id: CompanyIconId
+  entry: CompanyIconEntry
   label: string
   className?: string
 }) {
-  const entry = registry[id]
-
-  if (entry) {
-    const Icon = entry.icon
-    return (
-      <span
-        className={cn(
-          "inline-flex shrink-0 items-center justify-center text-black transition-colors duration-300 dark:text-white",
-          entry.sizeClassName ?? "h-4 w-4",
-          className,
-        )}
-        aria-label={label}
-        title={label}
-      >
-        <Icon className="h-full w-full" />
-      </span>
-    )
-  }
-
+  const Icon = entry.icon
   return (
     <span
-      title={label}
-      aria-label={label}
       className={cn(
-        "inline-flex h-5 w-5 select-none items-center justify-center rounded-full text-[10px] font-semibold uppercase leading-none ring-1 ring-current/30",
+        "inline-flex shrink-0 items-center justify-center text-black transition-colors duration-300 dark:text-white",
+        entry.sizeClassName ?? "h-4 w-4",
         className,
       )}
+      aria-label={label}
+      title={label}
     >
-      {label.charAt(0)}
+      <Icon className="h-full w-full" />
     </span>
   )
 }

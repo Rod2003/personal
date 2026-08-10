@@ -279,7 +279,7 @@ export default function MusicAdmin() {
             href="/"
             className="text-gray text-sm hover:text-yellow transition-colors"
           >
-            ← Back to terminal
+            ← Back
           </Link>
         </div>
       </div>

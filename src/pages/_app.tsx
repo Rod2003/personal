@@ -4,12 +4,6 @@ import Head from 'next/head';
 import { ThemeProvider } from 'next-themes';
 
 const App = ({ Component, pageProps }) => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
-
-  const onClickAnywhere = () => {
-    inputRef.current?.focus();
-  };
-
   return (
     <>
       <Head>
@@ -23,10 +17,9 @@ const App = ({ Component, pageProps }) => {
       <ThemeProvider attribute="class" disableTransitionOnChange>
         <div
           className="text-foreground w-full text-xs md:text-base"
-          onClick={onClickAnywhere}
         >
           <main className="bg-background w-full h-full p-2">
-            <Component {...pageProps} inputRef={inputRef} />
+            <Component {...pageProps} />
           </main>
         </div>
       </ThemeProvider>
