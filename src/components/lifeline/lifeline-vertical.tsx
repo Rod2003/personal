@@ -11,7 +11,7 @@ import {
 } from "react"
 import { Film, Image as ImageIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { CompanyIcon } from "./company-icon"
+import { CompanyIcon, getCompanyIcon } from "./company-icon"
 import {
   getLifelineEventEffect,
   getLifelineEventImage,
@@ -246,14 +246,20 @@ const LifelineVerticalEntry = forwardRef<
 
               {marker.companies && marker.companies.length > 0 && (
                 <div className="mb-2 flex items-center justify-start gap-1.5">
-                  {marker.companies.map((company) => (
-                    <CompanyIcon
-                      key={company.id}
-                      id={company.id}
-                      label={company.name}
-                      className="opacity-70"
-                    />
-                  ))}
+                  {marker.companies
+                    .map((company) => ({
+                      company,
+                      entry: getCompanyIcon(company.id),
+                    }))
+                    .filter(({ entry }) => entry)
+                    .map(({ company, entry }) => (
+                      <CompanyIcon
+                        key={company.id}
+                        entry={entry!}
+                        label={company.name}
+                        className="opacity-70"
+                      />
+                    ))}
                 </div>
               )}
 

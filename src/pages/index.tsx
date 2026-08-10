@@ -217,7 +217,7 @@ const IndexPage: React.FC<IndexPageProps> = ({ inputRef }) => {
   if (!mode) return <div className="h-full bg-background" />;
 
   if (mode === 'classic') {
-    return <ClassicPortfolio mode={mode} onModeChange={setViewMode} />;
+    return <ClassicPortfolio />;
   }
 
   return (

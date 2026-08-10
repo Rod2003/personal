@@ -28,6 +28,10 @@ export const personalLifeline = defineLifeline({
       id: 'learned-piano',
       events: ['Learned to play piano.'],
     },
+    2013: {
+      id: 'rubiks-cubes',
+      events: ["Got into Rubik's cubes. Fastest 3x3 solve is 17.2s."],
+    },
     2014: {
       id: 'gifted-program',
       events: ['Enrolled in the gifted program at my elementary school.'],
@@ -166,13 +170,15 @@ export const personalLifeline = defineLifeline({
         { id: 'grid-insights', name: 'Grid Insights' },
       ],
       events: [
-        'Worked at Dawson Partners as a software engineer.',
         [
-          { type: 'text', value: 'Became managing director at ' },
-          { type: 'link', value: 'QMIND', href: 'https://qmind.ca/' },
-          { type: 'text', value: '.' },
+          { type: 'text', value: 'Worked at ' },
+          {
+            type: 'link',
+            value: 'Dawson Partners',
+            href: 'https://dawsonpartners.com/',
+          },
+          { type: 'text', value: ' as a software engineer.' },
         ],
-        'Rebuilt Pario as a B2B workflow platform.',
         [
           { type: 'text', value: 'Joined ' },
           {
@@ -182,6 +188,7 @@ export const personalLifeline = defineLifeline({
           },
           { type: 'text', value: ' as a founding software engineer.' },
         ],
+        'Rebuilt Pario as a B2B workflow platform.',
       ],
     },
     2025: {

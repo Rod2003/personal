@@ -6,6 +6,23 @@
     "github": "Rod2003",
     "linkedin": "rodrigo-delaguila"
   },
+  "navItems": [
+    {
+      "label": "GitHub",
+      "href": "https://github.com/Rod2003",
+      "external": true
+    },
+    {
+      "label": "LinkedIn",
+      "href": "https://www.linkedin.com/in/rodrigo-delaguila",
+      "external": true,
+      "className": "hidden sm:inline"
+    },
+    {
+      "label": "Writing",
+      "href": "/writing"
+    }
+  ],
   "ps1_hostname": "rodrodrod",
   "ps1_username": "user00",
   "colors": {
