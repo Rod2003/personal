@@ -66,7 +66,8 @@ registerCompanyIcons({
 export const ClassicPortfolio: React.FC = () => (
   <>
     <Head>
-      <title>{config.name} — Lifeline</title>
+      <title>{config.name}</title>
+      <meta property="og:title" content={config.name} />
       <meta name="description" content={config.description} />
     </Head>
 
