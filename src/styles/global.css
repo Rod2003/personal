@@ -75,7 +75,7 @@ div#__next > div {
 }
 
 .lifeline-name-shimmer {
-  --lifeline-name-shimmer-highlight: #737373;
+  --lifeline-name-shimmer-rgb: 115 115 115;
   position: relative;
   display: inline-block;
 }
@@ -87,11 +87,11 @@ div#__next > div {
   content: attr(data-text);
   background-image: linear-gradient(
     90deg,
-    transparent 0%,
-    transparent 40%,
-    var(--lifeline-name-shimmer-highlight) 50%,
-    transparent 60%,
-    transparent 100%
+    rgb(var(--lifeline-name-shimmer-rgb) / 0) 0%,
+    rgb(var(--lifeline-name-shimmer-rgb) / 0) 40%,
+    rgb(var(--lifeline-name-shimmer-rgb) / 1) 50%,
+    rgb(var(--lifeline-name-shimmer-rgb) / 0) 60%,
+    rgb(var(--lifeline-name-shimmer-rgb) / 0) 100%
   );
   background-repeat: no-repeat;
   background-size: 400% 100%;
@@ -114,16 +114,6 @@ div#__next > div {
   }
   to {
     background-position: 0% 0;
-  }
-}
-
-.dark .lifeline-name-shimmer {
-  --lifeline-name-shimmer-highlight: #ededed;
-}
-
-@media (prefers-color-scheme: dark) {
-  .lifeline-name-shimmer {
-    --lifeline-name-shimmer-highlight: #ededed;
   }
 }
 
