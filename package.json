@@ -1,11 +1,10 @@
 {
-  "name": "liveterm",
+  "name": "personal",
   "version": "0.1.0",
   "license": "MIT",
   "author": {
-    "name": "Vincent Wu",
-    "url": "https://cveinnt.com",
-    "email": "contact@wensenwu.com"
+    "name": "Rodrigo Del Aguila",
+    "url": "https://github.com/Rod2003"
   },
   "scripts": {
     "dev": "node scripts/dev-https.mjs",
