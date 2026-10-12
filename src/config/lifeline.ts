@@ -239,6 +239,7 @@ const lifeline = defineLifeline({
       companies: [
         { id: 'circleback', name: 'Circleback' },
         { id: 'shelf', name: 'Shelf' },
+        { id: 'soundwave', name: 'Soundwave' },
       ],
       events: [
         {
@@ -260,6 +261,18 @@ const lifeline = defineLifeline({
           { type: 'text', value: 'Built ' },
           { type: 'link', value: 'Shelf', href: 'https://github.com/Rod2003/shelf' },
           { type: 'text', value: ', an open-source macOS native productivity tool.' },
+        ],
+        [
+          { type: 'text', value: 'Built ' },
+          {
+            type: 'link',
+            value: 'Soundwave',
+            href: 'https://github.com/Rod2003/soundwave',
+          },
+          {
+            type: 'text',
+            value: ', a macOS app that turns the MacBook notch into a Dynamic Island for whatever is playing.',
+          },
         ],
       ],
     },
