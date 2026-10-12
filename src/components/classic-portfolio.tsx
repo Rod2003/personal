@@ -32,6 +32,7 @@ const assetLogo = (src: string): React.FC<{ className?: string }> => {
 
 const CirclebackLogo = assetLogo('/assets/logos/circleback-favicon.ico');
 const ShelfLogo = assetLogo('/assets/logos/shelf.png');
+const SoundwaveLogo = assetLogo('/assets/logos/soundwave.png');
 const GridInsightsLogo = assetLogo('/assets/logos/grid-insights.svg');
 const RippleXFellowshipLogo = assetLogo('/assets/logos/ripplex-fellowship.png');
 const QmindLogo = assetLogo('/assets/logos/qmind-favicon.ico');
@@ -47,6 +48,7 @@ registerCompanyIcons({
   pario: { icon: ParioLogo, sizeClassName: 'h-5 w-5' },
   circleback: { icon: CirclebackLogo, sizeClassName: 'h-5 w-5' },
   shelf: { icon: ShelfLogo, sizeClassName: 'h-5 w-5' },
+  soundwave: { icon: SoundwaveLogo, sizeClassName: 'h-5 w-5' },
   'grid-insights': { icon: GridInsightsLogo, sizeClassName: 'h-5 w-5' },
   'ripplex-fellowship': {
     icon: RippleXFellowshipLogo,
